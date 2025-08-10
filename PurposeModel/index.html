@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purpose Model Creator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Purpose Model</h1>
+        <button id="hamburger-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav id="nav-menu">
+            <button id="new-btn">新規作成</button>
+            <button id="load-json-btn">データ読込</button>
+            <input type="file" id="json-file-input" accept=".json" style="display: none;">
+            <button id="save-json-btn">データ保存</button>
+            <button id="export-png-btn">PNG出力</button>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <div id="controls" class="control-panel">
+                <div class="control-section">
+                    <h2>時間軸</h2>
+                    <select id="timeline-status">
+                        <option value="current">現在</option>
+                        <option value="past">過去</option>
+                        <option value="near-future">数年先</option>
+                        <option value="future">将来</option>
+                    </select>
+                </div>
+                <div class="control-section">
+                    <h2>ステークホルダー追加</h2>
+                    <input type="text" id="stakeholder-name" placeholder="名前" maxlength="10">
+                    <input type="text" id="stakeholder-role" placeholder="役割" maxlength="10">
+                    <textarea id="stakeholder-goal" placeholder="目的" rows="3" maxlength="20"></textarea>
+                    <select id="stakeholder-category">
+                        <option value="company">企業</option>
+                        <option value="government">行政</option>
+                        <option value="citizen">住民</option>
+                        <option value="expert">専門家</option>
+                    </select>
+                    <select id="stakeholder-layer">
+                        <option value="supporting">上段 (共創)</option>
+                        <option value="leading">下段 (主体)</option>
+                    </select>
+                    <button id="add-stakeholder-btn">追加</button>
+                </div>
+            </div>
+            <div id="purpose-model" class="svg-container">
+                <svg id="model-svg"></svg>
+            </div>
+        </div>
+    </main>
+
+    <!-- カスタム編集モーダル -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">編集</h3>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <label for="modal-input" id="modal-label">内容を編集してください:</label>
+                <textarea id="modal-input" rows="3"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-delete" class="modal-btn modal-btn-delete" style="display: none;">削除</button>
+                <div class="modal-footer-right">
+                    <button id="modal-cancel" class="modal-btn modal-btn-cancel">キャンセル</button>
+                    <button id="modal-save" class="modal-btn modal-btn-save">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- カスタム確認モーダル -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="confirm-title">確認</h3>
+                <button class="modal-close" id="confirm-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message">実行しますか？</p>
+            </div>
+            <div class="modal-footer">
+                <button id="confirm-cancel" class="modal-btn modal-btn-cancel">キャンセル</button>
+                <button id="confirm-ok" class="modal-btn modal-btn-save">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- カスタム通知モーダル -->
+    <div id="alert-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="alert-title">通知</h3>
+                <button class="modal-close" id="alert-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="alert-message">メッセージ</p>
+            </div>
+            <div class="modal-footer">
+                <button id="alert-ok" class="modal-btn modal-btn-save">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <script src="https://unpkg.com/uuid@8.3.2/dist/umd/uuidv4.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

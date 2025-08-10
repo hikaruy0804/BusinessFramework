@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>パーパスモデル作成アプリ - 使い方</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            line-height: 1.6;
+            color: #2F3E46;
+            background: #F4F3EE;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .slide {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: 0 auto 20px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            page-break-after: always;
+            box-sizing: border-box;
+        }
+        
+        .slide:last-child {
+            page-break-after: avoid;
+        }
+        
+        h1 {
+            color: #2F3E46;
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #69DB7C;
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            color: #2F3E46;
+            font-size: 24px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            border-left: 5px solid #FFD43B;
+            padding-left: 15px;
+        }
+        
+        h3 {
+            color: #2F3E46;
+            font-size: 20px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .step {
+            background: #F8F9FA;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #5C7CFA;
+        }
+        
+        .step-number {
+            background: #5C7CFA;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .color-box {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 4px;
+            vertical-align: middle;
+        }
+        
+        .company { background: #69DB7C; }
+        .government { background: #FFD43B; }
+        .citizen { background: #FF8A65; }
+        .expert { background: #5C7CFA; }
+        
+        ul {
+            padding-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .highlight {
+            background: #FFE066;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .warning {
+            background: #FFF3CD;
+            border: 1px solid #FFEAA7;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .info {
+            background: #D1ECF1;
+            border: 1px solid #BEE5EB;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #6C757D;
+            margin-top: 30px;
+            border-top: 1px solid #DEE2E6;
+            padding-top: 15px;
+        }
+        
+        @media print {
+            body { background: white; }
+            .slide { 
+                box-shadow: none; 
+                margin: 0;
+                width: 100%;
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- スライド1: タイトル -->
+<div class="slide">
+    <h1>🎨 パーパスモデル作成<br>Webアプリケーション</h1>
+    <div style="text-align: center; margin-top: 50px;">
+        <h2 style="border: none; font-size: 32px; color: #5C7CFA;">使い方ガイド</h2>
+        <p style="font-size: 18px; margin-top: 40px;">
+            共通目的を中心に、関与者の関係性を<br>
+            ビジュアルに整理する共創設計図
+        </p>
+        <div class="info" style="margin-top: 50px;">
+            <strong>特徴</strong><br>
+            ✅ サーバー不要で完全ローカル動作<br>
+            ✅ 時間軸管理で変化を追跡<br>
+            ✅ JSON・PNG出力対応
+        </div>
+    </div>
+    <div class="footer">
+        パーパスモデル作成アプリケーション - 使い方ガイド
+    </div>
+</div>
+
+<!-- スライド2: 基本的な使い方 -->
+<div class="slide">
+    <h1>📋 基本的な使い方</h1>
+    
+    <div class="step">
+        <span class="step-number">1</span>
+        <strong>開始方法</strong><br>
+        <code>start.html</code> をブラウザで開き、開始方法を選択<br>
+        • <span class="highlight">サンプル付きで開始</span>：初めての方におすすめ<br>
+        • <span class="highlight">空の状態で開始</span>：実プロジェクト用
+    </div>
+    
+    <div class="step">
+        <span class="step-number">2</span>
+        <strong>時間軸の選択</strong><br>
+        画面左上のドロップダウンで時間軸を選択<br>
+        現在 / 過去 / 数年先 / 将来 の4つから選択可能
+    </div>
+    
+    <div class="step">
+        <span class="step-number">3</span>
+        <strong>共通目的の設定</strong><br>
+        中央の円をダブルクリックして編集<br>
+        • タイトル：<span class="highlight">10文字以内</span><br>
+        • 説明：<span class="highlight">20文字以内</span>
+    </div>
+    
+    <div class="footer">
+        パーパスモデル作成アプリケーション - 使い方ガイド
+    </div>
+</div>
+
+<!-- スライド3: ステークホルダー管理 -->
+<div class="slide">
+    <h1>👥 ステークホルダー管理</h1>
+    
+    <div class="step">
+        <span class="step-number">4</span>
+        <strong>ステークホルダーの追加</strong><br>
+        左パネルから情報を入力して「追加」ボタンをクリック
+    </div>
+    
+    <h3>📝 入力項目と文字数制限</h3>
+    <ul>
+        <li><strong>名前</strong>：<span class="highlight">10文字以内</span></li>
+        <li><strong>役割</strong>：<span class="highlight">10文字以内</span></li>
+        <li><strong>目的</strong>：<span class="highlight">20文字以内</span></li>
+        <li><strong>カテゴリ</strong>：企業/行政/住民/専門家から選択</li>
+        <li><strong>配置</strong>：上段(共創)/下段(主体)から選択</li>
+    </ul>
+    
+    <div class="step">
+        <span class="step-number">5</span>
+        <strong>編集・削除</strong><br>
+        • 円弧上の文字をダブルクリックで編集<br>
+        • 編集モーダルの「削除」ボタンで削除
+    </div>
+    
+    <div class="footer">
+        パーパスモデル作成アプリケーション - 使い方ガイド
+    </div>
+</div>
+
+<!-- スライド4: 保存・出力 -->
+<div class="slide">
+    <h1>💾 保存・出力</h1>
+    
+    <div class="step">
+        <span class="step-number">6</span>
+        <strong>保存・出力方法</strong>
+    </div>
+    
+    <h3>📤 出力オプション</h3>
+    <ul>
+        <li><strong>データ保存</strong>：JSON形式で保存（再編集可能）</li>
+        <li><strong>PNG出力</strong>：画像として保存（1000×800px）</li>
+        <li><strong>データ読込</strong>：保存したJSONファイルを読み込み</li>
+    </ul>
+    
+    <div class="info">
+        <strong>💡 自動保存機能</strong><br>
+        入力内容は自動的にブラウザに保存されるため、<br>
+        画面を更新しても内容が保持されます。
+    </div>
+    
+    <h3>🎨 色分けについて</h3>
+    <ul>
+        <li><span class="color-box company"></span><strong>企業</strong>：グリーン</li>
+        <li><span class="color-box government"></span><strong>行政</strong>：イエロー</li>
+        <li><span class="color-box citizen"></span><strong>住民</strong>：コーラルオレンジ</li>
+        <li><span class="color-box expert"></span><strong>専門家</strong>：ブルー</li>
+    </ul>
+    
+    <div class="footer">
+        パーパスモデル作成アプリケーション - 使い方ガイド
+    </div>
+</div>
+
+<!-- スライド5: ファイル構成と便利な機能 -->
+<div class="slide">
+    <h1>📁 ファイル構成と便利な機能</h1>
+    
+    <h2>📄 ファイルについて</h2>
+    <ul>
+        <li><strong>start.html</strong> - 選択画面</li>
+        <li><strong>sample.html</strong> - サンプルデータ付き（学習・デモ用）</li>
+        <li><strong>index.html</strong> - 空の状態（実プロジェクト用）</li>
+    </ul>
+    
+    <h2>⚡ 便利な機能</h2>
+    <ul>
+        <li><strong>自動保存</strong>：入力内容は自動的に保存される</li>
+        <li><strong>レスポンシブ</strong>：スマートフォンでも利用可能</li>
+        <li><strong>時間軸管理</strong>：複数の時間軸でモデルを管理</li>
+        <li><strong>アニメーション</strong>：要素の追加・削除時にスムーズな動作</li>
+    </ul>
+    
+    <div class="warning">
+        <strong>⚠️ 注意事項</strong><br>
+        • サーバー不要：完全にローカルで動作<br>
+        • ブラウザ推奨：Chrome, Firefox, Safari, Edge<br>
+        • データ保存：LocalStorageとファイル保存の両方に対応
+    </div>
+    
+    <div class="footer">
+        パーパスモデル作成アプリケーション - 使い方ガイド
+    </div>
+</div>
+
+<!-- スライド6: トラブルシューティング -->
+<div class="slide">
+    <h1>🔧 トラブルシューティング</h1>
+    
+    <h2>❓ よくある問題と解決方法</h2>
+    
+    <div class="step">
+        <strong>Q: ボタンが押せない</strong><br>
+        A: 入力欄がすべて埋まっているか、文字数制限を確認してください
+    </div>
+    
+    <div class="step">
+        <strong>Q: データが消えた</strong><br>
+        A: ブラウザのLocalStorageに自動保存されているため、<br>
+        　 同じブラウザで開き直すと復元されます
+    </div>
+    
+    <div class="step">
+        <strong>Q: PNG出力がうまくいかない</strong><br>
+        A: ブラウザを最新版に更新、または別のブラウザで試してください
+    </div>
+    
+    <div class="info">
+        <strong>💡 推奨環境</strong><br>
+        • Chrome 90以上<br>
+        • Firefox 88以上<br>
+        • Safari 14以上<br>
+        • Edge 90以上
+    </div>
+    
+    <div class="footer">
+        作成者：Amazon Q | 更新日：2025年8月8日
+    </div>
+</div>
+
+</body>
+</html>

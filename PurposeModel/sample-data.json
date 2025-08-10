@@ -1,0 +1,181 @@
+{
+  "currentTimeline": "current",
+  "timelineData": {
+    "past": {
+      "purpose": {
+        "title": "従来の行政運営",
+        "description": "行政主導による縦割りサービス"
+      },
+      "stakeholders": [
+        {
+          "id": "past-1",
+          "name": "市役所",
+          "role": "サービス提供",
+          "goal": "効率的な行政運営",
+          "category": "government",
+          "layer": "leading"
+        },
+        {
+          "id": "past-2",
+          "name": "外部委託業者",
+          "role": "業務代行",
+          "goal": "コスト削減",
+          "category": "company",
+          "layer": "supporting"
+        },
+        {
+          "id": "past-3",
+          "name": "住民",
+          "role": "受益者",
+          "goal": "サービス利用",
+          "category": "citizen",
+          "layer": "supporting"
+        }
+      ]
+    },
+    "current": {
+      "purpose": {
+        "title": "地域共創プロジェクト",
+        "description": "多様な主体による協働のまちづくり"
+      },
+      "stakeholders": [
+        {
+          "id": "current-1",
+          "name": "市役所企画課",
+          "role": "政策立案",
+          "goal": "住民参加型行政",
+          "category": "government",
+          "layer": "supporting"
+        },
+        {
+          "id": "current-2",
+          "name": "地域大学",
+          "role": "調査研究",
+          "goal": "課題の見える化",
+          "category": "expert",
+          "layer": "supporting"
+        },
+        {
+          "id": "current-3",
+          "name": "住民団体",
+          "role": "活動実践",
+          "goal": "生活環境改善",
+          "category": "citizen",
+          "layer": "leading"
+        },
+        {
+          "id": "current-4",
+          "name": "地元企業",
+          "role": "資源提供",
+          "goal": "地域経済活性化",
+          "category": "company",
+          "layer": "leading"
+        }
+      ]
+    },
+    "near-future": {
+      "purpose": {
+        "title": "デジタル共創基盤",
+        "description": "ICTを活用した持続可能な地域"
+      },
+      "stakeholders": [
+        {
+          "id": "near-1",
+          "name": "デジタル推進課",
+          "role": "DX推進",
+          "goal": "行政デジタル化",
+          "category": "government",
+          "layer": "supporting"
+        },
+        {
+          "id": "near-2",
+          "name": "IT企業",
+          "role": "技術提供",
+          "goal": "システム構築",
+          "category": "company",
+          "layer": "supporting"
+        },
+        {
+          "id": "near-3",
+          "name": "市民コミュニティ",
+          "role": "デジタル参加",
+          "goal": "オンライン協働",
+          "category": "citizen",
+          "layer": "leading"
+        },
+        {
+          "id": "near-4",
+          "name": "研究機関",
+          "role": "効果測定",
+          "goal": "データ分析",
+          "category": "expert",
+          "layer": "leading"
+        },
+        {
+          "id": "near-5",
+          "name": "NPO法人",
+          "role": "橋渡し役",
+          "goal": "多様な主体の連携",
+          "category": "citizen",
+          "layer": "supporting"
+        }
+      ]
+    },
+    "future": {
+      "purpose": {
+        "title": "自律的共創社会",
+        "description": "自発的協働による持続可能社会"
+      },
+      "stakeholders": [
+        {
+          "id": "future-1",
+          "name": "自治組織",
+          "role": "自主運営",
+          "goal": "地域自治の実現",
+          "category": "citizen",
+          "layer": "leading"
+        },
+        {
+          "id": "future-2",
+          "name": "社会起業家",
+          "role": "課題解決",
+          "goal": "持続可能事業",
+          "category": "company",
+          "layer": "leading"
+        },
+        {
+          "id": "future-3",
+          "name": "AI研究所",
+          "role": "技術革新",
+          "goal": "社会課題解決",
+          "category": "expert",
+          "layer": "supporting"
+        },
+        {
+          "id": "future-4",
+          "name": "次世代行政",
+          "role": "基盤整備",
+          "goal": "共創環境提供",
+          "category": "government",
+          "layer": "supporting"
+        },
+        {
+          "id": "future-5",
+          "name": "若者世代",
+          "role": "変革推進",
+          "goal": "新社会の構築",
+          "category": "citizen",
+          "layer": "leading"
+        },
+        {
+          "id": "future-6",
+          "name": "グローバル企業",
+          "role": "投資支援",
+          "goal": "社会価値創造",
+          "category": "company",
+          "layer": "supporting"
+        }
+      ]
+    }
+  }
+}
