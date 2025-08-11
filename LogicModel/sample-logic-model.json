@@ -1,0 +1,266 @@
+{
+  "version": "1.0",
+  "timestamp": "2025-01-11T05:00:00.000Z",
+  "data": {
+    "items": [
+      {
+        "id": "input-001",
+        "text": "専門講師",
+        "category": "inputs",
+        "x": 20,
+        "y": 65
+      },
+      {
+        "id": "input-002",
+        "text": "研修カリキュラム",
+        "category": "inputs",
+        "x": 20,
+        "y": 177
+      },
+      {
+        "id": "input-003",
+        "text": "研修予算",
+        "category": "inputs",
+        "x": 20,
+        "y": 289
+      },
+      {
+        "id": "activity-001",
+        "text": "スキル研修の実施",
+        "category": "activities",
+        "x": 190,
+        "y": 65
+      },
+      {
+        "id": "activity-002",
+        "text": "実践ワークショップ",
+        "category": "activities",
+        "x": 190,
+        "y": 177
+      },
+      {
+        "id": "activity-003",
+        "text": "個別コーチング",
+        "category": "activities",
+        "x": 190,
+        "y": 289
+      },
+      {
+        "id": "output-001",
+        "text": "研修参加者数",
+        "category": "outputs",
+        "x": 360,
+        "y": 65
+      },
+      {
+        "id": "output-002",
+        "text": "修了証書発行数",
+        "category": "outputs",
+        "x": 360,
+        "y": 177
+      },
+      {
+        "id": "output-003",
+        "text": "実習完了時間",
+        "category": "outputs",
+        "x": 360,
+        "y": 289
+      },
+      {
+        "id": "short-outcome-001",
+        "text": "新スキル習得",
+        "category": "short_outcomes",
+        "x": 530,
+        "y": 65
+      },
+      {
+        "id": "short-outcome-002",
+        "text": "学習モチベーション向上",
+        "category": "short_outcomes",
+        "x": 530,
+        "y": 177
+      },
+      {
+        "id": "short-outcome-003",
+        "text": "自己効力感の向上",
+        "category": "short_outcomes",
+        "x": 530,
+        "y": 289
+      },
+      {
+        "id": "middle-outcome-001",
+        "text": "業務パフォーマンス向上",
+        "category": "middle_outcomes",
+        "x": 700,
+        "y": 65
+      },
+      {
+        "id": "middle-outcome-002",
+        "text": "昇進・昇格",
+        "category": "middle_outcomes",
+        "x": 700,
+        "y": 177
+      },
+      {
+        "id": "middle-outcome-003",
+        "text": "転職成功",
+        "category": "middle_outcomes",
+        "x": 700,
+        "y": 289
+      },
+      {
+        "id": "impact-001",
+        "text": "組織全体の生産性向上",
+        "category": "impact",
+        "x": 870,
+        "y": 65
+      },
+      {
+        "id": "impact-002",
+        "text": "業界全体のスキル底上げ",
+        "category": "impact",
+        "x": 870,
+        "y": 177
+      },
+      {
+        "id": "impact-003",
+        "text": "社会の人材力強化",
+        "category": "impact",
+        "x": 870,
+        "y": 289
+      }
+    ],
+    "connections": [
+      {
+        "id": "conn-001",
+        "source": "input-001",
+        "target": "activity-001"
+      },
+      {
+        "id": "conn-002",
+        "source": "input-002",
+        "target": "activity-001"
+      },
+      {
+        "id": "conn-003",
+        "source": "input-001",
+        "target": "activity-002"
+      },
+      {
+        "id": "conn-004",
+        "source": "input-002",
+        "target": "activity-002"
+      },
+      {
+        "id": "conn-005",
+        "source": "input-001",
+        "target": "activity-003"
+      },
+      {
+        "id": "conn-006",
+        "source": "input-003",
+        "target": "activity-001"
+      },
+      {
+        "id": "conn-007",
+        "source": "input-003",
+        "target": "activity-002"
+      },
+      {
+        "id": "conn-008",
+        "source": "input-003",
+        "target": "activity-003"
+      },
+      {
+        "id": "conn-009",
+        "source": "activity-001",
+        "target": "output-001"
+      },
+      {
+        "id": "conn-010",
+        "source": "activity-001",
+        "target": "output-002"
+      },
+      {
+        "id": "conn-011",
+        "source": "activity-002",
+        "target": "output-003"
+      },
+      {
+        "id": "conn-012",
+        "source": "activity-003",
+        "target": "output-003"
+      },
+      {
+        "id": "conn-013",
+        "source": "output-001",
+        "target": "short-outcome-001"
+      },
+      {
+        "id": "conn-014",
+        "source": "output-002",
+        "target": "short-outcome-001"
+      },
+      {
+        "id": "conn-015",
+        "source": "output-003",
+        "target": "short-outcome-001"
+      },
+      {
+        "id": "conn-016",
+        "source": "output-001",
+        "target": "short-outcome-002"
+      },
+      {
+        "id": "conn-017",
+        "source": "output-003",
+        "target": "short-outcome-003"
+      },
+      {
+        "id": "conn-018",
+        "source": "short-outcome-001",
+        "target": "middle-outcome-001"
+      },
+      {
+        "id": "conn-019",
+        "source": "short-outcome-002",
+        "target": "middle-outcome-001"
+      },
+      {
+        "id": "conn-020",
+        "source": "short-outcome-003",
+        "target": "middle-outcome-001"
+      },
+      {
+        "id": "conn-021",
+        "source": "short-outcome-002",
+        "target": "middle-outcome-002"
+      },
+      {
+        "id": "conn-022",
+        "source": "short-outcome-001",
+        "target": "middle-outcome-003"
+      },
+      {
+        "id": "conn-023",
+        "source": "middle-outcome-001",
+        "target": "impact-001"
+      },
+      {
+        "id": "conn-024",
+        "source": "middle-outcome-002",
+        "target": "impact-001"
+      },
+      {
+        "id": "conn-025",
+        "source": "middle-outcome-003",
+        "target": "impact-002"
+      },
+      {
+        "id": "conn-026",
+        "source": "middle-outcome-002",
+        "target": "impact-003"
+      }
+    ]
+  }
+}

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Model Creator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Logic Model</h1>
+        <button id="hamburger-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav id="nav-menu">
+            <button id="new-btn">新規作成</button>
+            <button id="load-json-btn">データ読込</button>
+            <input type="file" id="json-file-input" accept=".json" style="display: none;">
+            <button id="save-json-btn">データ保存</button>
+            <button id="export-png-btn">PNG出力</button>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <div id="controls" class="control-panel">
+                <button id="add-item-modal-btn" class="add-item-btn">＋項目追加</button>
+            </div>
+            <div id="logic-model" class="svg-container">
+                <svg id="model-svg"></svg>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Item Modal -->
+    <div id="add-item-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="add-modal-title">項目追加</h3>
+                <button class="modal-close" id="add-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <label for="add-modal-input">内容を入力してください:</label>
+                <textarea id="add-modal-input" rows="4" maxlength="30" placeholder="内容を入力"></textarea>
+                <div id="add-char-count" style="font-size: 12px; color: #666666; margin-top: 5px; text-align: right;">0/30文字</div>
+                <label for="add-modal-category">カテゴリを選択してください:</label>
+                <select id="add-modal-category">
+                    <option value="inputs">インプット</option>
+                    <option value="activities">アクティビティ</option>
+                    <option value="outputs">アウトプット</option>
+                    <option value="short_outcomes">短期アウトカム</option>
+                    <option value="middle_outcomes">中期アウトカム</option>
+                    <option value="impact">インパクト</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <div class="modal-footer-right">
+                    <button id="add-modal-cancel" class="modal-btn modal-btn-cancel">キャンセル</button>
+                    <button id="add-modal-save" class="modal-btn modal-btn-save">追加</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal (from PurposeModel) -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">編集</h3>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <label for="modal-input" id="modal-label">内容を編集してください:</label>
+                <textarea id="modal-input" rows="4" maxlength="30"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-delete" class="modal-btn modal-btn-delete">削除</button>
+                <div class="modal-footer-right">
+                    <button id="modal-cancel" class="modal-btn modal-btn-cancel">キャンセル</button>
+                    <button id="modal-save" class="modal-btn modal-btn-save">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal (from PurposeModel) -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="confirm-title">確認</h3>
+                <button class="modal-close" id="confirm-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message">実行しますか？</p>
+            </div>
+            <div class="modal-footer">
+                <button id="confirm-cancel" class="modal-btn modal-btn-cancel">キャンセル</button>
+                <button id="confirm-ok" class="modal-btn modal-btn-save">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Modal (from PurposeModel) -->
+    <div id="alert-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="alert-title">通知</h3>
+                <button class="modal-close" id="alert-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="alert-message">メッセージ</p>
+            </div>
+            <div class="modal-footer">
+                <button id="alert-ok" class="modal-btn modal-btn-save">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <script src="https://unpkg.com/uuid@8.3.2/dist/umd/uuidv4.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>パーパスモデル作成アプリ - 使い方</title>
+    <title>Business Framework - 使い方ガイド</title>
     <style>
         @page {
             size: A4;
@@ -148,44 +148,46 @@
 
 <!-- スライド1: タイトル -->
 <div class="slide">
-    <h1>🎨 パーパスモデル作成<br>Webアプリケーション</h1>
-    <div style="text-align: center; margin-top: 50px;">
-        <h2 style="border: none; font-size: 32px; color: #5C7CFA;">使い方ガイド</h2>
-        <p style="font-size: 18px; margin-top: 40px;">
-            共通目的を中心に、関与者の関係性を<br>
-            ビジュアルに整理する共創設計図
+    <h1 style="border-bottom: 3px solid #5C7CFA;">(修正中)Business Framework - 使い方ガイド</h1>
+    <div style="text-align: center; margin-top: 40px;">
+        <p style="font-size: 18px;">
+            このガイドでは、２つの事業設計ツール「パーパスモデル」と「ロジックモデル」の使い方を説明します。
         </p>
-        <div class="info" style="margin-top: 50px;">
-            <strong>特徴</strong><br>
-            ✅ サーバー不要で完全ローカル動作<br>
-            ✅ 時間軸管理で変化を追跡<br>
-            ✅ JSON・PNG出力対応
-        </div>
     </div>
+
+    <div class="info" style="margin-top: 30px; padding: 20px;">
+        <h2 style="border: none; text-align: center; margin-bottom: 20px;">🎨 パーパスモデル</h2>
+        <p>共通目的を中心に、関与者の関係性をビジュアルに整理する共創設計図です。誰が、なぜ、どのように関わるのかを明確にします。</p>
+    </div>
+
+    <div class="info" style="margin-top: 30px; padding: 20px; border-color: #69DB7C;">
+        <h2 style="border: none; text-align: center; margin-bottom: 20px;">📊 ロジックモデル</h2>
+        <p>事業の投入資源（インプット）から、活動、産出（アウトプット）、成果（アウトカム）への論理的なつながりを可視化する計画・評価ツールです。</p>
+    </div>
+
     <div class="footer">
-        パーパスモデル作成アプリケーション - 使い方ガイド
+        Business Framework - 使い方ガイド
     </div>
 </div>
 
-<!-- スライド2: 基本的な使い方 -->
+<!-- スライド2: パーパスモデル - 基本的な使い方 -->
 <div class="slide">
-    <h1>📋 基本的な使い方</h1>
-    
+    <h1>🎨 パーパスモデル - 基本的な使い方</h1>
+
     <div class="step">
         <span class="step-number">1</span>
         <strong>開始方法</strong><br>
-        <code>start.html</code> をブラウザで開き、開始方法を選択<br>
-        • <span class="highlight">サンプル付きで開始</span>：初めての方におすすめ<br>
-        • <span class="highlight">空の状態で開始</span>：実プロジェクト用
+        - <code>index.html</code> をブラウザで開くと、空のキャンバスが表示されます。<br>
+        - <strong>サンプルを見る場合:</strong> 画面上部の「データ読込」ボタンをクリックし、<code>sample-data.json</code>を選択してください。
     </div>
-    
+
     <div class="step">
         <span class="step-number">2</span>
         <strong>時間軸の選択</strong><br>
         画面左上のドロップダウンで時間軸を選択<br>
         現在 / 過去 / 数年先 / 将来 の4つから選択可能
     </div>
-    
+
     <div class="step">
         <span class="step-number">3</span>
         <strong>共通目的の設定</strong><br>
@@ -193,15 +195,15 @@
         • タイトル：<span class="highlight">10文字以内</span><br>
         • 説明：<span class="highlight">20文字以内</span>
     </div>
-    
+
     <div class="footer">
-        パーパスモデル作成アプリケーション - 使い方ガイド
+        Business Framework - 使い方ガイド
     </div>
 </div>
 
 <!-- スライド3: ステークホルダー管理 -->
 <div class="slide">
-    <h1>👥 ステークホルダー管理</h1>
+    <h1>🎨 パーパスモデル - ステークホルダー管理</h1>
     
     <div class="step">
         <span class="step-number">4</span>
@@ -226,13 +228,13 @@
     </div>
     
     <div class="footer">
-        パーパスモデル作成アプリケーション - 使い方ガイド
+        Business Framework - 使い方ガイド
     </div>
 </div>
 
 <!-- スライド4: 保存・出力 -->
 <div class="slide">
-    <h1>💾 保存・出力</h1>
+    <h1>🎨 パーパスモデル - 保存・出力</h1>
     
     <div class="step">
         <span class="step-number">6</span>
@@ -261,44 +263,45 @@
     </ul>
     
     <div class="footer">
-        パーパスモデル作成アプリケーション - 使い方ガイド
+        Business Framework - 使い方ガイド
     </div>
 </div>
 
-<!-- スライド5: ファイル構成と便利な機能 -->
+<!-- スライド5: パーパスモデル - ファイル構成と便利な機能 -->
 <div class="slide">
-    <h1>📁 ファイル構成と便利な機能</h1>
-    
-    <h2>📄 ファイルについて</h2>
+    <h1>🎨 パーパスモデル - ファイル構成と便利な機能</h1>
+
+    <h2>📄 主なファイル構成</h2>
     <ul>
-        <li><strong>start.html</strong> - 選択画面</li>
-        <li><strong>sample.html</strong> - サンプルデータ付き（学習・デモ用）</li>
-        <li><strong>index.html</strong> - 空の状態（実プロジェクト用）</li>
+        <li><strong>index.html</strong> - アプリケーションのメインファイル</li>
+        <li><strong>script.js</strong> - プログラム本体</li>
+        <li><strong>style.css</strong> - デザイン定義ファイル</li>
+        <li><strong>sample-data.json</strong> - サンプルデータ</li>
     </ul>
-    
+
     <h2>⚡ 便利な機能</h2>
     <ul>
-        <li><strong>自動保存</strong>：入力内容は自動的に保存される</li>
+        <li><strong>自動保存</strong>：入力内容は自動的にブラウザに保存される</li>
         <li><strong>レスポンシブ</strong>：スマートフォンでも利用可能</li>
         <li><strong>時間軸管理</strong>：複数の時間軸でモデルを管理</li>
         <li><strong>アニメーション</strong>：要素の追加・削除時にスムーズな動作</li>
     </ul>
-    
+
     <div class="warning">
         <strong>⚠️ 注意事項</strong><br>
         • サーバー不要：完全にローカルで動作<br>
         • ブラウザ推奨：Chrome, Firefox, Safari, Edge<br>
         • データ保存：LocalStorageとファイル保存の両方に対応
     </div>
-    
+
     <div class="footer">
-        パーパスモデル作成アプリケーション - 使い方ガイド
+        Business Framework - 使い方ガイド
     </div>
 </div>
 
 <!-- スライド6: トラブルシューティング -->
 <div class="slide">
-    <h1>🔧 トラブルシューティング</h1>
+    <h1>🎨 パーパスモデル - トラブルシューティング</h1>
     
     <h2>❓ よくある問題と解決方法</h2>
     
@@ -328,6 +331,128 @@
     
     <div class="footer">
         作成者：Amazon Q | 更新日：2025年8月8日
+    </div>
+</div>
+
+
+<!-- スライド7: Logic Model Creator - 使い方ガイド -->
+<div class="slide">
+    <h1>📊 ロジックモデル - 使い方ガイド</h1>
+    <div class="info">
+        <p>事業の投入資源（インプット）から、活動、産出（アウトプット）、成果（アウトカム）への論理的なつながりを可視化する計画・評価ツールです。</p>
+    </div>
+
+    <h2>起動と基本操作</h2>
+
+    <div class="step">
+        <span class="step-number">1</span>
+        <strong>起動方法</strong><br>
+        - <code>index.html</code> をブラウザで開くと、サンプルデータが読み込まれた状態で開始します。<br>
+        - <strong>空の状態で始めたい場合:</strong> 画面上部の「新規作成」ボタンをクリックしてください。
+    </div>
+
+    <div class="step">
+        <span class="step-number">2</span>
+        <strong>新しい項目（カード）の追加</strong><br>
+        1. 画面左のパネルにある「＋項目追加」ボタンをクリックします。<br>
+        2. 表示されたウィンドウに、項目の内容を入力し、カテゴリを選択します。<br>
+        3. 「追加」ボタンをクリックすると、新しいカードがキャンバスに追加されます。
+    </div>
+
+    <div class="step">
+        <span class="step-number">3</span>
+        <strong>項目（カード）の編集・削除</strong><br>
+        - 編集したいカードを「ダブルクリック」します。<br>
+        - 表示されたウィンドウで、内容の編集やカテゴリの変更ができます。<br>
+        - 「保存」ボタンで変更を保存し、「削除」ボタンでカードを削除します。
+    </div>
+    <div class="footer">
+        Logic Model Creator - 使い方ガイド
+    </div>
+</div>
+
+<!-- スライド8: Logic Model Creator - 詳細操作 -->
+<div class="slide">
+    <h1>📊 ロジックモデル - 詳細操作</h1>
+
+    <h2>カードの移動と関連付け</h2>
+
+    <div class="step">
+        <span class="step-number">4</span>
+        <strong>項目（カード）の移動</strong><br>
+        - 移動したいカードをマウスでドラッグ＆ドロップすることで、カラム内での順序を入れ替えたり、他のカラムへ移動したりできます。
+    </div>
+
+    <div class="step">
+        <span class="step-number">5</span>
+        <strong>項目間に矢印を引く</strong><br>
+        1. 矢印の始点にしたいカードを一度クリックします。（カードの枠がピンクの破線に変わります）<br>
+        2. 次に、矢印の終点にしたいカードをクリックします。<br>
+        3. ２つのカードが矢印で結ばれます。<br>
+        <span class="highlight">※ 同じカテゴリ内のカード同士は矢印で結べません。</span>
+    </div>
+
+    <div class="step">
+        <span class="step-number">6</span>
+        <strong>矢印の削除</strong><br>
+        - 削除したい矢印を「ダブルクリック」すると、確認メッセージが表示された後、削除されます。
+    </div>
+    <div class="footer">
+        Logic Model Creator - 使い方ガイド
+    </div>
+</div>
+
+<!-- スライド9: ロジックモデル - データ管理 -->
+<div class="slide">
+    <h1>📊 ロジックモデル - データ管理</h1>
+
+    <h2>データの保存と読み込み</h2>
+
+    <div class="step">
+        <span class="step-number">7</span>
+        <strong>作業内容をファイルに保存する</strong><br>
+        - 画面上部にある「データ保存」ボタンをクリックしてください。<br>
+        - `logic-model-(日付).json` という名前のファイルがダウンロードされます。
+    </div>
+
+    <div class="step">
+        <span class="step-number">8</span>
+        <strong>ファイルからデータを読み込む</strong><br>
+        1. 画面上部にある「データ読込」ボタンをクリックします。<br>
+        2. ファイル選択画面が開くので、以前に保存したJSONファイルを選択してください。<br>
+        3. キャンバスにデータが読み込まれます。<br>
+        <span class="warning"><strong>⚠️ 注意：</strong>現在表示されている内容は上書きされます。</span>
+    </div>
+
+    <div class="warning">
+        <strong>⚠️ PNG出力について</strong><br>
+        現在、「PNG出力」ボタンは機能していません。今後のアップデートで対応予定です。
+    </div>
+
+    <div class="footer">
+        Business Framework - 使い方ガイド
+    </div>
+</div>
+
+<!-- スライド10: ロジックモデル - ファイル構成 -->
+<div class="slide">
+    <h1>📊 ロジックモデル - ファイル構成</h1>
+
+    <h2>📄 主なファイル構成</h2>
+    <ul>
+        <li><strong>index.html</strong> - アプリケーションのメインファイル</li>
+        <li><strong>script.js</strong> - プログラム本体</li>
+        <li><strong>style.css</strong> - デザイン定義ファイル</li>
+        <li><strong>sample-logic-model.json</strong> - サンプルデータ</li>
+    </ul>
+
+    <div class="info">
+        <strong>💡 自動保存機能</strong><br>
+        入力内容は自動的にブラウザのLocalStorageに保存されるため、画面を更新しても内容が保持されます。
+    </div>
+
+    <div class="footer">
+        Business Framework - 使い方ガイド
     </div>
 </div>
 
