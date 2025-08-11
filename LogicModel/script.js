@@ -183,26 +183,49 @@ document.addEventListener('DOMContentLoaded', () => {
                 .attr('opacity', 0.5)
                 .style('pointer-events', 'none');
 
-            // Card text
-            card.append('foreignObject')
-                .attr('width', cardWidth)
-                .attr('height', cardHeight)
-                .style('pointer-events', 'none')
-                .append('xhtml:div')
-                .style('padding', '12px')
-                .style('font-size', '14px')
-                .style('color', '#fff')
-                .style('font-weight', '700')
-                .style('line-height', '1.3')
-                .style('text-align', 'center')
-                .style('display', 'flex')
-                .style('justify-content', 'center')
-                .style('align-items', 'center')
-                .style('height', '100%')
-                .style('width', '100%')
-                .style('box-sizing', 'border-box')
-                .style('word-break', 'break-word')
-                .html(item.text);
+            // Card text using SVG text elements instead of foreignObject
+            const textGroup = card.append('g')
+                .attr('class', 'card-text')
+                .style('pointer-events', 'none');
+
+            // Split text into lines for better display
+            const words = item.text.split(' ');
+            const lines = [];
+            const maxCharsPerLine = Math.floor(cardWidth / 8); // Approximate characters per line
+            let currentLine = '';
+
+            for (const word of words) {
+                if ((currentLine + word).length <= maxCharsPerLine) {
+                    currentLine += (currentLine ? ' ' : '') + word;
+                } else {
+                    if (currentLine) lines.push(currentLine);
+                    currentLine = word;
+                }
+            }
+            if (currentLine) lines.push(currentLine);
+
+            // Limit to maximum 3 lines
+            const displayLines = lines.slice(0, 3);
+            if (lines.length > 3) {
+                displayLines[2] = displayLines[2].substring(0, maxCharsPerLine - 3) + '...';
+            }
+
+            // Draw text lines
+            const lineHeight = 12;
+            const startY = cardHeight / 2 - ((displayLines.length - 1) * lineHeight / 2);
+
+            displayLines.forEach((line, index) => {
+                textGroup.append('text')
+                    .attr('x', cardWidth / 2)
+                    .attr('y', startY + (index * lineHeight))
+                    .attr('text-anchor', 'middle')
+                    .attr('dominant-baseline', 'middle')
+                    .attr('font-family', 'Arial, sans-serif')
+                    .attr('font-size', '11px')
+                    .attr('font-weight', '700')
+                    .attr('fill', '#ffffff')
+                    .text(line);
+            });
         });
     }
 
@@ -396,7 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
         modelData = { items: [], connections: [] };
         saveToLocalStorage();
         drawModel();
-        showMessage('新しいロジックモデルを作成しました。');
+        window.showMessage('新しいロジックモデルを作成しました。');
     }
     addItemModalBtn.addEventListener('click', () => {
         addModalInput.value = '';
@@ -679,11 +702,36 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Current category:', oldCategory);
             
             if (categorySelect && categorySelect.value !== oldCategory) {
-                currentEditData.category = categorySelect.value;
-                console.log('Category changed from', oldCategory, 'to', categorySelect.value);
-                if (window.showMessage) {
-                    window.showMessage('項目を更新し、ステージを移動しました。');
+                // カテゴリが変更された場合、関連する矢印を削除
+                const itemId = currentEditData.id;
+                const connectionsToRemove = modelData.connections.filter(connection => 
+                    connection.source === itemId || connection.target === itemId
+                );
+                
+                if (connectionsToRemove.length > 0) {
+                    // 矢印を削除
+                    modelData.connections = modelData.connections.filter(connection => 
+                        connection.source !== itemId && connection.target !== itemId
+                    );
+                    
+                    console.log(`Removed ${connectionsToRemove.length} connections for item ${itemId}`);
+                    
+                    // カテゴリを変更
+                    currentEditData.category = categorySelect.value;
+                    
+                    if (window.showMessage) {
+                        window.showMessage(`項目を更新し、ステージを移動しました。関連する矢印${connectionsToRemove.length}本を削除しました。`);
+                    }
+                } else {
+                    // 矢印がない場合は通常のメッセージ
+                    currentEditData.category = categorySelect.value;
+                    
+                    if (window.showMessage) {
+                        window.showMessage('項目を更新し、ステージを移動しました。');
+                    }
                 }
+                
+                console.log('Category changed from', oldCategory, 'to', categorySelect.value);
             } else {
                 console.log('Category not changed');
                 if (window.showMessage) {
@@ -858,25 +906,55 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     // Header button event handlers
-    if (newBtn) newBtn.addEventListener('click', createNewModel);
-    if (loadJsonBtn) loadJsonBtn.addEventListener('click', () => jsonFileInput.click());
+    if (newBtn) {
+        newBtn.addEventListener('click', createNewModel);
+        console.log('New button event listener added');
+    } else {
+        console.error('New button not found');
+    }
+    
+    if (loadJsonBtn) {
+        loadJsonBtn.addEventListener('click', () => {
+            console.log('Load JSON button clicked');
+            jsonFileInput.click();
+        });
+        console.log('Load JSON button event listener added');
+    } else {
+        console.error('Load JSON button not found');
+    }
+    
     if (jsonFileInput) {
         jsonFileInput.addEventListener('change', (e) => {
+            console.log('File input changed');
             if (e.target.files.length > 0) {
                 importFromJSON(e.target.files[0]);
                 e.target.value = ''; // Reset file input
             }
         });
+        console.log('JSON file input event listener added');
+    } else {
+        console.error('JSON file input not found');
     }
-    if (saveJsonBtn) saveJsonBtn.addEventListener('click', exportToJSON);
+    
+    if (saveJsonBtn) {
+        saveJsonBtn.addEventListener('click', exportToJSON);
+        console.log('Save JSON button event listener added');
+    } else {
+        console.error('Save JSON button not found');
+    }
     
     // Hamburger menu functionality
     const hamburgerBtn = document.getElementById('hamburger-btn');
     const navMenu = document.getElementById('nav-menu');
+    console.log('Hamburger button:', hamburgerBtn);
+    console.log('Nav menu:', navMenu);
+    
     if (hamburgerBtn && navMenu) {
         hamburgerBtn.addEventListener('click', () => {
+            console.log('Hamburger button clicked');
             navMenu.classList.toggle('active');
             hamburgerBtn.classList.toggle('active');
+            console.log('Nav menu active:', navMenu.classList.contains('active'));
         });
         
         // Close menu when clicking outside
@@ -884,8 +962,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!hamburgerBtn.contains(e.target) && !navMenu.contains(e.target)) {
                 navMenu.classList.remove('active');
                 hamburgerBtn.classList.remove('active');
+                console.log('Menu closed by outside click');
             }
         });
+        
+        console.log('Hamburger menu event listeners added');
+    } else {
+        console.error('Hamburger button or nav menu not found');
     }
     
     modalSave.addEventListener('click', saveEdit);
@@ -903,25 +986,218 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', drawModel);
     
     // Initial setup
-    async function initializeApp() {
+    function initializeApp() {
         const hasData = loadFromLocalStorage();
         if (!hasData) {
-            // ローカルストレージにデータがない場合、サンプルデータを読み込む
-            try {
-                const response = await fetch('sample-logic-model.json');
-                if (response.ok) {
-                    const sampleData = await response.json();
-                    if (sampleData.data) {
-                        modelData = sampleData.data;
-                        saveToLocalStorage(); // サンプルデータを保存
-                        console.log('Sample data loaded and saved');
-                    }
-                }
-            } catch (error) {
-                console.warn('Failed to load sample data:', error);
-            }
+            // 初期状態は空のモデルから開始
+            modelData = { items: [], connections: [] };
+            console.log('Starting with empty model');
         }
         drawModel();
+    }
+    
+    // 開発者向け: ローカルストレージを完全にクリアする関数
+    // ブラウザのコンソールで window.clearAllData() を実行すると使用可能
+    window.clearAllData = function() {
+        if (confirm('すべてのローカルデータを削除します。この操作は取り消せません。続行しますか？')) {
+            localStorage.removeItem(STORAGE_KEY);
+            modelData = { items: [], connections: [] };
+            drawModel();
+            window.showMessage('すべてのデータを削除しました。');
+            console.log('All local data cleared');
+        }
+    };
+    
+    // --- PNG Export ---
+    async function exportToPNG() {
+        try {
+            console.log('Starting PNG export with html2canvas...');
+            
+            // 現在のデータを保存
+            saveToLocalStorage();
+            
+            // SVG要素とコンテナを取得
+            const svgContainer = document.getElementById('logic-model');
+            const svgElement = document.getElementById('model-svg');
+            if (!svgContainer || !svgElement) {
+                throw new Error('SVG container or element not found');
+            }
+            
+            // 元のスタイルを保存
+            const originalContainerStyle = svgContainer.style.cssText;
+            const originalSvgStyle = svgElement.style.cssText;
+            const originalViewBox = svgElement.getAttribute('viewBox');
+            const originalWidth = svgElement.getAttribute('width');
+            const originalHeight = svgElement.getAttribute('height');
+            
+            // コンテンツのサイズを動的に計算
+            const numColumns = Object.keys(categories).length; // 6列
+            const columnWidth = 180; // 各列の幅
+            const contentWidth = numColumns * columnWidth;
+            
+            // 各カテゴリの項目数を計算して最大高さを求める
+            let maxItemsInColumn = 0;
+            Object.keys(categories).forEach(category => {
+                const itemsInCategory = modelData.items.filter(item => item.category === category).length;
+                maxItemsInColumn = Math.max(maxItemsInColumn, itemsInCategory);
+            });
+            
+            // 高さを動的に計算
+            const titleHeight = 50;
+            const cardHeight = 77;
+            const cardVMargin = 35;
+            const minHeight = 400; // 最小高さ
+            
+            const calculatedHeight = titleHeight + (maxItemsInColumn * (cardHeight + cardVMargin)) + cardVMargin + 50; // 下部余白
+            const contentHeight = Math.max(minHeight, calculatedHeight);
+            
+            const padding = 40;
+            const exportWidth = contentWidth + padding * 2;
+            const exportHeight = contentHeight + padding * 2;
+            
+            console.log('Export dimensions:', { 
+                exportWidth, 
+                exportHeight, 
+                contentWidth, 
+                contentHeight, 
+                maxItemsInColumn,
+                calculatedHeight
+            });
+            
+            // コンテナのスタイル設定
+            svgContainer.style.width = `${exportWidth}px`;
+            svgContainer.style.height = `${exportHeight}px`;
+            svgContainer.style.backgroundColor = 'white';
+            svgContainer.style.display = 'flex';
+            svgContainer.style.justifyContent = 'center';
+            svgContainer.style.alignItems = 'flex-start';
+            svgContainer.style.padding = `${padding}px`;
+            svgContainer.style.boxSizing = 'border-box';
+            svgContainer.style.overflow = 'visible';
+            
+            // SVG要素のサイズ設定
+            svgElement.setAttribute('width', contentWidth);
+            svgElement.setAttribute('height', contentHeight);
+            svgElement.setAttribute('viewBox', `0 0 ${contentWidth} ${contentHeight}`);
+            svgElement.style.width = `${contentWidth}px`;
+            svgElement.style.height = `${contentHeight}px`;
+            svgElement.style.display = 'block';
+            
+            // 再描画
+            drawModel();
+            
+            // 少し待ってから html2canvas でキャプチャ
+            setTimeout(async () => {
+                try {
+                    const canvas = await html2canvas(svgContainer, {
+                        backgroundColor: '#ffffff',
+                        scale: 2, // 高解像度
+                        useCORS: true,
+                        allowTaint: false,
+                        foreignObjectRendering: false,
+                        logging: false,
+                        width: exportWidth,
+                        height: exportHeight,
+                        x: 0,
+                        y: 0,
+                        scrollX: 0,
+                        scrollY: 0
+                    });
+                    
+                    // PNGとして保存
+                    canvas.toBlob((blob) => {
+                        if (!blob) {
+                            throw new Error('Failed to create PNG blob');
+                        }
+                        
+                        const downloadUrl = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = downloadUrl;
+                        a.download = `logic-model-${new Date().toISOString().split('T')[0]}.png`;
+                        a.style.display = 'none';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(downloadUrl);
+                        
+                        if (window.showMessage) {
+                            window.showMessage('PNG画像をダウンロードしました。');
+                        }
+                    }, 'image/png', 0.95);
+                    
+                } catch (error) {
+                    console.error('html2canvas error:', error);
+                    // フォールバック: SVG出力
+                    await fallbackToSVG();
+                } finally {
+                    // スタイルを元に戻す
+                    restoreOriginalStyles();
+                }
+            }, 300); // 少し長めに待機
+
+            function restoreOriginalStyles() {
+                svgContainer.style.cssText = originalContainerStyle;
+                svgElement.style.cssText = originalSvgStyle;
+                
+                if (originalViewBox) {
+                    svgElement.setAttribute('viewBox', originalViewBox);
+                } else {
+                    svgElement.removeAttribute('viewBox');
+                }
+                if (originalWidth) {
+                    svgElement.setAttribute('width', originalWidth);
+                } else {
+                    svgElement.removeAttribute('width');
+                }
+                if (originalHeight) {
+                    svgElement.setAttribute('height', originalHeight);
+                } else {
+                    svgElement.removeAttribute('height');
+                }
+                
+                // 通常表示用に再描画
+                drawModel();
+            }
+
+        } catch (error) {
+            console.error('PNG Export failed:', error);
+            alert(`PNGエクスポートに失敗しました: ${error.message}`);
+        }
+    }
+    
+    // フォールバック: SVG出力
+    async function fallbackToSVG() {
+        try {
+            const svgElement = document.getElementById('model-svg');
+            if (!svgElement) return;
+            
+            const svgString = new XMLSerializer().serializeToString(svgElement);
+            const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+            const downloadUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = `logic-model-${new Date().toISOString().split('T')[0]}.svg`;
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(downloadUrl);
+            
+            if (window.showMessage) {
+                window.showMessage('PNG変換に失敗したため、SVG画像をダウンロードしました。');
+            }
+        } catch (error) {
+            console.error('SVG fallback failed:', error);
+            alert('画像の出力に失敗しました。');
+        }
+    }
+    
+    // PNG export button event handler
+    if (exportPngBtn) {
+        exportPngBtn.addEventListener('click', exportToPNG);
+        console.log('PNG export button event listener added');
+    } else {
+        console.error('PNG export button not found');
     }
     
     initializeApp();
@@ -936,72 +1212,284 @@ async function exportToPNG() {
             throw new Error('SVG element not found');
         }
         
-        const { width, height } = svgElement.getBoundingClientRect();
-        console.log('SVG dimensions:', width, height);
-
-        // Create a deep clone of the SVG element to avoid modifying the live one
-        const clonedSvgElement = svgElement.cloneNode(true);
-
-        // Apply styles directly to SVG elements to avoid CORS issues
-        const styleElement = document.createElement('style');
-        styleElement.textContent = `
-            .logic-card rect {
-                filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.1));
-            }
-            .connection {
-                stroke-linejoin: round;
-                stroke-linecap: round;
-            }
-            .column-bg {
-                fill: #fdfdfd;
-                stroke: #f0f0f0;
-                stroke-width: 1;
-            }
-            .column-title {
-                font-family: Arial, sans-serif;
-                font-size: 18px;
-                font-weight: bold;
-                fill: #2F3E46;
-                text-anchor: middle;
-            }
-            text {
-                font-family: Arial, sans-serif;
-            }
-        `;
+        // 現在のデータを保存
+        saveToLocalStorage();
         
-        // Add the style to the <defs> element or create it if it doesn't exist
-        let defs = clonedSvgElement.querySelector('defs');
-        if (!defs) {
-            defs = document.createElement('defs');
-            clonedSvgElement.prepend(defs);
-        }
-        defs.prepend(styleElement);
+        // 固定サイズで十分な余白を確保
+        const exportWidth = 1200;
+        const exportHeight = 800;
+        
+        // 一時的にSVGのサイズを設定
+        const originalViewBox = svgElement.getAttribute('viewBox');
+        const originalWidth = svgElement.getAttribute('width');
+        const originalHeight = svgElement.getAttribute('height');
+        
+        svgElement.setAttribute('width', exportWidth);
+        svgElement.setAttribute('height', exportHeight);
+        svgElement.setAttribute('viewBox', `0 0 ${exportWidth} ${exportHeight}`);
+        
+        // エクスポート用に再描画
+        drawModel();
+        
+        // 少し待ってからSVGを取得（描画完了を待つ）
+        setTimeout(() => {
+            // SVGを文字列として取得
+            const svgString = new XMLSerializer().serializeToString(svgElement);
+            
+            // Canvasを作成
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const scale = 2; // 高解像度
+            canvas.width = exportWidth * scale;
+            canvas.height = exportHeight * scale;
+            ctx.scale(scale, scale);
+            
+            // 背景を白に設定
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, exportWidth, exportHeight);
+            
+            // SVGをImageに変換
+            const img = new Image();
+            const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(svgBlob);
 
-        // Set explicit dimensions and namespace on the cloned SVG
-        clonedSvgElement.setAttribute('width', width);
-        clonedSvgElement.setAttribute('height', height);
-        clonedSvgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-        clonedSvgElement.setAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
-
-        // Get SVG data as XML string from the cloned element
-        const svgData = new XMLSerializer().serializeToString(clonedSvgElement);
-        console.log('SVG serialized, length:', svgData.length);
-
-        // Try PNG export first, fallback to SVG if it fails
-        try {
-            await exportAsPNG(svgData, width, height);
-        } catch (pngError) {
-            console.warn('PNG export failed, falling back to SVG:', pngError);
-            exportAsSVG(svgData);
-            if (window.showMessage) {
-                window.showMessage('PNG変換に失敗したため、SVGファイルをダウンロードしました。');
+            img.onload = () => {
+                // 画像をcanvasに描画
+                ctx.drawImage(img, 0, 0, exportWidth, exportHeight);
+                
+                // PNGとして保存
+                canvas.toBlob((blob) => {
+                    if (!blob) {
+                        throw new Error('Failed to create PNG blob');
+                    }
+                    
+                    const downloadUrl = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+                    a.download = `logic-model-${new Date().toISOString().split('T')[0]}.png`;
+                    a.style.display = 'none';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(downloadUrl);
+                    
+                    if (window.showMessage) {
+                        window.showMessage('PNG画像をダウンロードしました。');
+                    }
+                }, 'image/png', 0.95);
+                
+                // リソースをクリーンアップ
+                URL.revokeObjectURL(url);
+                
+                // SVGの属性を元に戻す
+                restoreSVGAttributes();
+            };
+            
+            img.onerror = (error) => {
+                console.error('PNG出力エラー:', error);
+                alert('PNG出力に失敗しました。');
+                URL.revokeObjectURL(url);
+                
+                // エラー時もSVGの属性を元に戻す
+                restoreSVGAttributes();
+            };
+            
+            function restoreSVGAttributes() {
+                if (originalViewBox) {
+                    svgElement.setAttribute('viewBox', originalViewBox);
+                } else {
+                    svgElement.removeAttribute('viewBox');
+                }
+                if (originalWidth) {
+                    svgElement.setAttribute('width', originalWidth);
+                } else {
+                    svgElement.removeAttribute('width');
+                }
+                if (originalHeight) {
+                    svgElement.setAttribute('height', originalHeight);
+                } else {
+                    svgElement.removeAttribute('height');
+                }
+                
+                // 通常表示用に再描画
+                drawModel();
             }
-        }
+            
+            img.src = url;
+        }, 100); // 100ms待機
 
     } catch (error) {
-        console.error('Export failed:', error);
-        alert(`エクスポートに失敗しました: ${error.message}`);
+        console.error('PNG Export failed:', error);
+        alert(`PNGエクスポートに失敗しました: ${error.message}`);
     }
+}
+
+async function drawModelToCanvas(ctx, width, height) {
+    // Calculate dimensions
+    const numColumns = columnOrder.length;
+    const colWidth = width / numColumns;
+    const cardW = colWidth - 40;
+    const cardH = 77;
+    const cardVMargin = 35;
+    const titleHeight = 50;
+
+    // Draw columns background
+    columnOrder.forEach((category, i) => {
+        const x = i * colWidth;
+        
+        // Column background
+        ctx.fillStyle = '#fdfdfd';
+        ctx.strokeStyle = '#f0f0f0';
+        ctx.lineWidth = 1;
+        ctx.fillRect(x, 0, colWidth, height);
+        ctx.strokeRect(x, 0, colWidth, height);
+        
+        // Column title
+        ctx.fillStyle = '#2F3E46';
+        ctx.font = 'bold 18px Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(categories[category].label, x + colWidth / 2, 30);
+    });
+
+    // Draw connections first (behind cards)
+    modelData.connections.forEach(connection => {
+        const sourceItem = modelData.items.find(item => item.id === connection.source);
+        const targetItem = modelData.items.find(item => item.id === connection.target);
+        
+        if (!sourceItem || !targetItem) return;
+
+        // Update positions
+        const sourceIndex = columnOrder.indexOf(sourceItem.category);
+        const targetIndex = columnOrder.indexOf(targetItem.category);
+        const sourceCategoryItems = modelData.items.filter(item => item.category === sourceItem.category);
+        const targetCategoryItems = modelData.items.filter(item => item.category === targetItem.category);
+        const sourceItemIndex = sourceCategoryItems.findIndex(item => item.id === sourceItem.id);
+        const targetItemIndex = targetCategoryItems.findIndex(item => item.id === targetItem.id);
+
+        const sourceX = sourceIndex * colWidth + (colWidth - cardW) / 2;
+        const sourceY = titleHeight + sourceItemIndex * (cardH + cardVMargin) + cardVMargin;
+        const targetX = targetIndex * colWidth + (colWidth - cardW) / 2;
+        const targetY = titleHeight + targetItemIndex * (cardH + cardVMargin) + cardVMargin;
+
+        // Draw arrow
+        const startX = sourceX + cardW;
+        const startY = sourceY + cardH / 2;
+        const endX = targetX;
+        const endY = targetY + cardH / 2;
+
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        
+        // Create curved path
+        const deltaX = endX - startX;
+        const controlOffset = Math.max(50, Math.abs(deltaX) * 0.4);
+        const cp1X = startX + controlOffset;
+        const cp1Y = startY;
+        const cp2X = endX - controlOffset;
+        const cp2Y = endY;
+        
+        ctx.moveTo(startX, startY);
+        ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY);
+        ctx.stroke();
+
+        // Draw arrowhead
+        const angle = Math.atan2(endY - cp2Y, endX - cp2X);
+        const arrowLength = 10;
+        ctx.beginPath();
+        ctx.moveTo(endX, endY);
+        ctx.lineTo(
+            endX - arrowLength * Math.cos(angle - Math.PI / 6),
+            endY - arrowLength * Math.sin(angle - Math.PI / 6)
+        );
+        ctx.moveTo(endX, endY);
+        ctx.lineTo(
+            endX - arrowLength * Math.cos(angle + Math.PI / 6),
+            endY - arrowLength * Math.sin(angle + Math.PI / 6)
+        );
+        ctx.stroke();
+    });
+
+    // Draw cards
+    modelData.items.forEach(item => {
+        const categoryIndex = columnOrder.indexOf(item.category);
+        const categoryItems = modelData.items.filter(i => i.category === item.category);
+        const itemIndex = categoryItems.findIndex(i => i.id === item.id);
+        
+        const x = categoryIndex * colWidth + (colWidth - cardW) / 2;
+        const y = titleHeight + itemIndex * (cardH + cardVMargin) + cardVMargin;
+
+        // Draw card background
+        ctx.fillStyle = categories[item.category].color;
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 3;
+        
+        // Rounded rectangle
+        const radius = 12;
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + cardW - radius, y);
+        ctx.quadraticCurveTo(x + cardW, y, x + cardW, y + radius);
+        ctx.lineTo(x + cardW, y + cardH - radius);
+        ctx.quadraticCurveTo(x + cardW, y + cardH, x + cardW - radius, y + cardH);
+        ctx.lineTo(x + radius, y + cardH);
+        ctx.quadraticCurveTo(x, y + cardH, x, y + cardH - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Draw text
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 11px Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        // Split text into lines
+        const maxWidth = cardW - 24; // padding
+        const words = item.text.split(' ');
+        const lines = [];
+        let currentLine = '';
+
+        for (const word of words) {
+            const testLine = currentLine + (currentLine ? ' ' : '') + word;
+            const metrics = ctx.measureText(testLine);
+            if (metrics.width > maxWidth && currentLine) {
+                lines.push(currentLine);
+                currentLine = word;
+            } else {
+                currentLine = testLine;
+            }
+        }
+        if (currentLine) lines.push(currentLine);
+
+        // Limit to 3 lines
+        const displayLines = lines.slice(0, 3);
+        if (lines.length > 3) {
+            displayLines[2] = displayLines[2].substring(0, displayLines[2].length - 3) + '...';
+        }
+
+        // Draw lines
+        const lineHeight = 12;
+        const textStartY = y + cardH / 2 - ((displayLines.length - 1) * lineHeight / 2);
+        
+        displayLines.forEach((line, index) => {
+            ctx.fillText(line, x + cardW / 2, textStartY + (index * lineHeight));
+        });
+
+        // Draw connection points
+        ctx.fillStyle = '#000';
+        ctx.globalAlpha = 0.5;
+        ctx.beginPath();
+        ctx.arc(x + cardW, y + cardH / 2, 3, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(x, y + cardH / 2, 3, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+    });
 }
 
 async function exportAsPNG(svgData, width, height) {
@@ -1023,60 +1511,95 @@ async function exportAsPNG(svgData, width, height) {
     // Replace foreignObject with native SVG text to avoid CORS issues
     let cleanSvgData = svgData;
     
-    // Remove foreignObject elements and replace with SVG text
-    cleanSvgData = cleanSvgData.replace(/<foreignObject[^>]*>[\s\S]*?<\/foreignObject>/g, (match) => {
-        // Extract text content from the foreignObject
-        const htmlContent = match.match(/<xhtml:div[^>]*>([\s\S]*?)<\/xhtml:div>/);
-        let text = '';
-        if (htmlContent) {
-            // Remove HTML tags and get plain text
-            text = htmlContent[1].replace(/<[^>]*>/g, '').trim();
-        }
-        
-        // Extract position attributes
-        const widthMatch = match.match(/width="([^"]+)"/);
-        const heightMatch = match.match(/height="([^"]+)"/);
-        const cardWidth = widthMatch ? parseFloat(widthMatch[1]) : 100;
-        const cardHeight = heightMatch ? parseFloat(heightMatch[1]) : 50;
-        
-        if (text) {
-            // Split text into multiple lines if it's too long
-            const maxCharsPerLine = Math.floor(cardWidth / 8); // Approximate characters per line
-            const words = text.split(' ');
-            const lines = [];
-            let currentLine = '';
+    // First, collect all card positions from transform attributes
+    const cardPositions = new Map();
+    const cardMatches = cleanSvgData.match(/<g[^>]*class="logic-card"[^>]*transform="translate\(([^,]+),([^)]+)\)"[^>]*>[\s\S]*?<\/g>/g);
+    
+    if (cardMatches) {
+        cardMatches.forEach(cardMatch => {
+            const transformMatch = cardMatch.match(/transform="translate\(([^,]+),([^)]+)\)"/);
+            const foreignObjectMatch = cardMatch.match(/<foreignObject[^>]*>([\s\S]*?)<\/foreignObject>/);
             
-            for (const word of words) {
-                if ((currentLine + word).length <= maxCharsPerLine) {
-                    currentLine += (currentLine ? ' ' : '') + word;
-                } else {
-                    if (currentLine) lines.push(currentLine);
-                    currentLine = word;
+            if (transformMatch && foreignObjectMatch) {
+                const x = parseFloat(transformMatch[1]);
+                const y = parseFloat(transformMatch[2]);
+                
+                // Extract text from foreignObject
+                const htmlContent = foreignObjectMatch[1].match(/<xhtml:div[^>]*>([\s\S]*?)<\/xhtml:div>/);
+                let text = '';
+                if (htmlContent) {
+                    text = htmlContent[1].replace(/<[^>]*>/g, '').trim();
+                }
+                
+                if (text) {
+                    cardPositions.set(foreignObjectMatch[0], { x, y, text });
                 }
             }
-            if (currentLine) lines.push(currentLine);
-            
-            // Limit to maximum 3 lines
-            const displayLines = lines.slice(0, 3);
-            if (lines.length > 3) {
-                displayLines[2] = displayLines[2].substring(0, maxCharsPerLine - 3) + '...';
-            }
-            
-            // Create multiple tspan elements for multi-line text
-            const lineHeight = 12;
-            const startY = cardHeight / 2 - ((displayLines.length - 1) * lineHeight / 2);
-            
-            let textElements = displayLines.map((line, index) => 
-                `<tspan x="${cardWidth/2}" y="${startY + (index * lineHeight)}" dy="${index === 0 ? '0' : lineHeight}">${line}</tspan>`
-            ).join('');
-            
-            // Create SVG text element instead of foreignObject
-            return `<text text-anchor="middle" dominant-baseline="middle" 
-                    font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="white">
-                    ${textElements}
-                    </text>`;
+        });
+    }
+    
+    // Remove foreignObject elements and replace with SVG text
+    cleanSvgData = cleanSvgData.replace(/<foreignObject[^>]*>[\s\S]*?<\/foreignObject>/g, (match) => {
+        const positionData = cardPositions.get(match);
+        
+        if (!positionData) {
+            console.warn('Could not find position data for foreignObject');
+            return '';
         }
-        return '';
+        
+        const { x, y, text } = positionData;
+        
+        // Extract size attributes from foreignObject
+        const widthMatch = match.match(/width="([^"]+)"/);
+        const heightMatch = match.match(/height="([^"]+)"/);
+        
+        const objWidth = widthMatch ? parseFloat(widthMatch[1]) : cardWidth;
+        const objHeight = heightMatch ? parseFloat(heightMatch[1]) : cardHeight;
+        
+        console.log('Processing text:', text, 'at position:', { x, y, width: objWidth, height: objHeight });
+        
+        // Calculate text position (center of the card)
+        const textX = x + objWidth / 2;
+        const textY = y + objHeight / 2;
+        
+        // Split text into multiple lines if it's too long
+        const maxCharsPerLine = Math.floor(objWidth / 8); // Approximate characters per line
+        const words = text.split(' ');
+        const lines = [];
+        let currentLine = '';
+        
+        for (const word of words) {
+            if ((currentLine + word).length <= maxCharsPerLine) {
+                currentLine += (currentLine ? ' ' : '') + word;
+            } else {
+                if (currentLine) lines.push(currentLine);
+                currentLine = word;
+            }
+        }
+        if (currentLine) lines.push(currentLine);
+        
+        // Limit to maximum 3 lines
+        const displayLines = lines.slice(0, 3);
+        if (lines.length > 3) {
+            displayLines[2] = displayLines[2].substring(0, maxCharsPerLine - 3) + '...';
+        }
+        
+        // Create multiple tspan elements for multi-line text
+        const lineHeight = 12;
+        const startY = textY - ((displayLines.length - 1) * lineHeight / 2);
+        
+        let textElements = displayLines.map((line, index) => 
+            `<tspan x="${textX}" y="${startY + (index * lineHeight)}">${line}</tspan>`
+        ).join('');
+        
+        // Create SVG text element instead of foreignObject
+        const svgText = `<text text-anchor="middle" dominant-baseline="middle" 
+                font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="white">
+                ${textElements}
+                </text>`;
+        
+        console.log('Generated SVG text for:', text);
+        return svgText;
     });
 
     // Create SVG data URL to avoid CORS issues
@@ -1159,14 +1682,3 @@ function exportAsSVG(svgData) {
     URL.revokeObjectURL(downloadUrl);
     console.log('SVG download completed');
 }
-
-// Ensure the event listener is added after DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    const exportBtn = document.getElementById('export-png-btn');
-    if (exportBtn) {
-        exportBtn.addEventListener('click', exportToPNG);
-        console.log('PNG export button event listener added');
-    } else {
-        console.error('PNG export button not found');
-    }
-});

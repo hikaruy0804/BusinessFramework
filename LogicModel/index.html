@@ -42,10 +42,7 @@
                 <button class="modal-close" id="add-modal-close">&times;</button>
             </div>
             <div class="modal-body">
-                <label for="add-modal-input">内容を入力してください:</label>
-                <textarea id="add-modal-input" rows="4" maxlength="30" placeholder="内容を入力"></textarea>
-                <div id="add-char-count" style="font-size: 12px; color: #666666; margin-top: 5px; text-align: right;">0/30文字</div>
-                <label for="add-modal-category">カテゴリを選択してください:</label>
+                                <label for="add-modal-category">カテゴリを選択してください:</label>
                 <select id="add-modal-category">
                     <option value="inputs">インプット</option>
                     <option value="activities">アクティビティ</option>
@@ -54,6 +51,9 @@
                     <option value="middle_outcomes">中期アウトカム</option>
                     <option value="impact">インパクト</option>
                 </select>
+                <label for="add-modal-input">内容を入力してください:</label>
+                <textarea id="add-modal-input" rows="4" maxlength="30" placeholder="内容を入力"></textarea>
+                <div id="add-char-count" style="font-size: 12px; color: #666666; margin-top: 5px; text-align: right;">0/30文字</div>
             </div>
             <div class="modal-footer">
                 <div class="modal-footer-right">
@@ -121,6 +121,7 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
     <script src="https://unpkg.com/uuid@8.3.2/dist/umd/uuidv4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
