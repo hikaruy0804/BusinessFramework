@@ -101,6 +101,13 @@ document.addEventListener('DOMContentLoaded', () => {
         cardWidth = columnWidth - 40;
     }
 
+    // PNG出力用の固定サイズ計算関数
+    function calculateDimensionsForExport(fixedWidth) {
+        const numColumns = columnOrder.length;
+        columnWidth = fixedWidth / numColumns;
+        cardWidth = columnWidth - 40;
+    }
+
     function drawColumns(width, height) {
         const columnGroup = svg.append('g').attr('class', 'columns');
         
@@ -1032,8 +1039,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // コンテンツのサイズを動的に計算
             const numColumns = Object.keys(categories).length; // 6列
-            const columnWidth = 180; // 各列の幅
-            const contentWidth = numColumns * columnWidth;
+            const fixedColumnWidth = 180; // 各列の固定幅
+            const contentWidth = numColumns * fixedColumnWidth;
             
             // 各カテゴリの項目数を計算して最大高さを求める
             let maxItemsInColumn = 0;
@@ -1064,9 +1071,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 calculatedHeight
             });
             
-            // コンテナのスタイル設定
+            // コンテナのスタイル設定（中央配置を確実にする）
+            svgContainer.style.position = 'relative';
             svgContainer.style.width = `${exportWidth}px`;
             svgContainer.style.height = `${exportHeight}px`;
+            svgContainer.style.margin = '0';
             svgContainer.style.backgroundColor = 'white';
             svgContainer.style.display = 'flex';
             svgContainer.style.justifyContent = 'center';
@@ -1082,6 +1091,10 @@ document.addEventListener('DOMContentLoaded', () => {
             svgElement.style.width = `${contentWidth}px`;
             svgElement.style.height = `${contentHeight}px`;
             svgElement.style.display = 'block';
+            svgElement.style.margin = '0 auto';
+            
+            // PNG出力用の固定サイズ計算を使用
+            calculateDimensionsForExport(contentWidth);
             
             // 再描画
             drawModel();
@@ -1155,7 +1168,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     svgElement.removeAttribute('height');
                 }
                 
-                // 通常表示用に再描画
+                // 通常表示用の計算方法に戻して再描画
+                calculateDimensions();
                 drawModel();
             }
 
@@ -1215,18 +1229,41 @@ async function exportToPNG() {
         // 現在のデータを保存
         saveToLocalStorage();
         
-        // 固定サイズで十分な余白を確保
-        const exportWidth = 1200;
-        const exportHeight = 800;
+        // コンテンツサイズを動的に計算
+        const numColumns = Object.keys(categories).length;
+        const fixedColumnWidth = 180;
+        const contentWidth = numColumns * fixedColumnWidth;
+        
+        // 各カテゴリの項目数を計算して最大高さを求める
+        let maxItemsInColumn = 0;
+        Object.keys(categories).forEach(category => {
+            const itemsInCategory = modelData.items.filter(item => item.category === category).length;
+            maxItemsInColumn = Math.max(maxItemsInColumn, itemsInCategory);
+        });
+        
+        // 高さを動的に計算
+        const titleHeight = 50;
+        const cardHeight = 77;
+        const cardVMargin = 35;
+        const minHeight = 400;
+        const calculatedHeight = titleHeight + (maxItemsInColumn * (cardHeight + cardVMargin)) + cardVMargin + 50;
+        const contentHeight = Math.max(minHeight, calculatedHeight);
+        
+        const padding = 40;
+        const exportWidth = contentWidth + padding * 2;
+        const exportHeight = contentHeight + padding * 2;
         
         // 一時的にSVGのサイズを設定
         const originalViewBox = svgElement.getAttribute('viewBox');
         const originalWidth = svgElement.getAttribute('width');
         const originalHeight = svgElement.getAttribute('height');
         
-        svgElement.setAttribute('width', exportWidth);
-        svgElement.setAttribute('height', exportHeight);
-        svgElement.setAttribute('viewBox', `0 0 ${exportWidth} ${exportHeight}`);
+        svgElement.setAttribute('width', contentWidth);
+        svgElement.setAttribute('height', contentHeight);
+        svgElement.setAttribute('viewBox', `0 0 ${contentWidth} ${contentHeight}`);
+        
+        // PNG出力用の固定サイズ計算を使用
+        calculateDimensionsForExport(contentWidth);
         
         // エクスポート用に再描画
         drawModel();
@@ -1254,8 +1291,8 @@ async function exportToPNG() {
             const url = URL.createObjectURL(svgBlob);
 
             img.onload = () => {
-                // 画像をcanvasに描画
-                ctx.drawImage(img, 0, 0, exportWidth, exportHeight);
+                // 画像をcanvasの中央に描画（パディングを考慮）
+                ctx.drawImage(img, padding, padding, contentWidth, contentHeight);
                 
                 // PNGとして保存
                 canvas.toBlob((blob) => {
@@ -1311,7 +1348,8 @@ async function exportToPNG() {
                     svgElement.removeAttribute('height');
                 }
                 
-                // 通常表示用に再描画
+                // 通常表示用の計算方法に戻して再描画
+                calculateDimensions();
                 drawModel();
             }
             
