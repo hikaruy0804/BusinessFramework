@@ -1,10 +1,13 @@
 {
   "currentTimeline": "current",
+  "currentMode": "timeline",
+  "comparisonList": ["競合A社", "競合B社", "自社"],
+  "selectedComparison": "自社",
   "timelineData": {
     "past": {
       "purpose": {
         "title": "従来の行政運営",
-        "description": "行政主導による縦割りサービス"
+        "description": "行政主導による縦割りサービス提供"
       },
       "stakeholders": [
         {
@@ -19,7 +22,7 @@
           "id": "past-2",
           "name": "外部委託業者",
           "role": "業務代行",
-          "goal": "コスト削減",
+          "goal": "コスト削減支援",
           "category": "company",
           "layer": "supporting"
         },
@@ -27,7 +30,7 @@
           "id": "past-3",
           "name": "住民",
           "role": "受益者",
-          "goal": "サービス利用",
+          "goal": "行政サービス利用",
           "category": "citizen",
           "layer": "supporting"
         }
@@ -36,14 +39,14 @@
     "current": {
       "purpose": {
         "title": "地域共創プロジェクト",
-        "description": "多様な主体による協働のまちづくり"
+        "description": "多様な主体による協働のまちづくり実現"
       },
       "stakeholders": [
         {
           "id": "current-1",
           "name": "市役所企画課",
           "role": "政策立案",
-          "goal": "住民参加型行政",
+          "goal": "住民参加型行政推進",
           "category": "government",
           "layer": "supporting"
         },
@@ -51,7 +54,7 @@
           "id": "current-2",
           "name": "地域大学",
           "role": "調査研究",
-          "goal": "課題の見える化",
+          "goal": "地域課題の見える化",
           "category": "expert",
           "layer": "supporting"
         },
@@ -70,13 +73,21 @@
           "goal": "地域経済活性化",
           "category": "company",
           "layer": "leading"
+        },
+        {
+          "id": "current-5",
+          "name": "NPO法人",
+          "role": "橋渡し役",
+          "goal": "多様な主体の連携",
+          "category": "citizen",
+          "layer": "supporting"
         }
       ]
     },
     "near-future": {
       "purpose": {
         "title": "デジタル共創基盤",
-        "description": "ICTを活用した持続可能な地域"
+        "description": "ICTを活用した持続可能な地域社会"
       },
       "stakeholders": [
         {
@@ -91,7 +102,7 @@
           "id": "near-2",
           "name": "IT企業",
           "role": "技術提供",
-          "goal": "システム構築",
+          "goal": "デジタル基盤構築",
           "category": "company",
           "layer": "supporting"
         },
@@ -99,7 +110,7 @@
           "id": "near-3",
           "name": "市民コミュニティ",
           "role": "デジタル参加",
-          "goal": "オンライン協働",
+          "goal": "オンライン協働実現",
           "category": "citizen",
           "layer": "leading"
         },
@@ -107,15 +118,23 @@
           "id": "near-4",
           "name": "研究機関",
           "role": "効果測定",
-          "goal": "データ分析",
+          "goal": "データ分析・評価",
           "category": "expert",
           "layer": "leading"
         },
         {
           "id": "near-5",
-          "name": "NPO法人",
-          "role": "橋渡し役",
-          "goal": "多様な主体の連携",
+          "name": "スタートアップ",
+          "role": "革新的解決",
+          "goal": "新サービス創出",
+          "category": "company",
+          "layer": "leading"
+        },
+        {
+          "id": "near-6",
+          "name": "シニア世代",
+          "role": "知見提供",
+          "goal": "経験の活用",
           "category": "citizen",
           "layer": "supporting"
         }
@@ -124,14 +143,14 @@
     "future": {
       "purpose": {
         "title": "自律的共創社会",
-        "description": "自発的協働による持続可能社会"
+        "description": "自発的協働による持続可能社会の実現"
       },
       "stakeholders": [
         {
           "id": "future-1",
           "name": "自治組織",
           "role": "自主運営",
-          "goal": "地域自治の実現",
+          "goal": "地域自治の完全実現",
           "category": "citizen",
           "layer": "leading"
         },
@@ -139,7 +158,7 @@
           "id": "future-2",
           "name": "社会起業家",
           "role": "課題解決",
-          "goal": "持続可能事業",
+          "goal": "持続可能事業創出",
           "category": "company",
           "layer": "leading"
         },
@@ -147,7 +166,7 @@
           "id": "future-3",
           "name": "AI研究所",
           "role": "技術革新",
-          "goal": "社会課題解決",
+          "goal": "社会課題解決支援",
           "category": "expert",
           "layer": "supporting"
         },
@@ -173,6 +192,160 @@
           "role": "投資支援",
           "goal": "社会価値創造",
           "category": "company",
+          "layer": "supporting"
+        },
+        {
+          "id": "future-7",
+          "name": "国際機関",
+          "role": "標準化推進",
+          "goal": "グローバル連携",
+          "category": "expert",
+          "layer": "supporting"
+        }
+      ]
+    }
+  },
+  "comparisonData": {
+    "競合A社": {
+      "purpose": {
+        "title": "効率重視の事業運営",
+        "description": "コスト削減と業務効率化による収益最大化"
+      },
+      "stakeholders": [
+        {
+          "id": "comp-a-1",
+          "name": "経営陣",
+          "role": "意思決定",
+          "goal": "株主価値最大化",
+          "category": "company",
+          "layer": "leading"
+        },
+        {
+          "id": "comp-a-2",
+          "name": "営業部門",
+          "role": "売上拡大",
+          "goal": "市場シェア獲得",
+          "category": "company",
+          "layer": "leading"
+        },
+        {
+          "id": "comp-a-3",
+          "name": "外部コンサル",
+          "role": "戦略立案",
+          "goal": "競争優位性確保",
+          "category": "expert",
+          "layer": "supporting"
+        },
+        {
+          "id": "comp-a-4",
+          "name": "顧客企業",
+          "role": "サービス利用",
+          "goal": "コスト削減",
+          "category": "company",
+          "layer": "supporting"
+        }
+      ]
+    },
+    "競合B社": {
+      "purpose": {
+        "title": "技術革新による差別化",
+        "description": "最新技術を活用した革新的サービス提供"
+      },
+      "stakeholders": [
+        {
+          "id": "comp-b-1",
+          "name": "CTO",
+          "role": "技術戦略",
+          "goal": "技術的優位性確保",
+          "category": "company",
+          "layer": "leading"
+        },
+        {
+          "id": "comp-b-2",
+          "name": "R&D部門",
+          "role": "研究開発",
+          "goal": "イノベーション創出",
+          "category": "company",
+          "layer": "leading"
+        },
+        {
+          "id": "comp-b-3",
+          "name": "大学研究室",
+          "role": "共同研究",
+          "goal": "基礎技術開発",
+          "category": "expert",
+          "layer": "supporting"
+        },
+        {
+          "id": "comp-b-4",
+          "name": "ベンチャーキャピタル",
+          "role": "資金提供",
+          "goal": "投資リターン獲得",
+          "category": "company",
+          "layer": "supporting"
+        },
+        {
+          "id": "comp-b-5",
+          "name": "アーリーアダプター",
+          "role": "試験利用",
+          "goal": "先進的価値獲得",
+          "category": "citizen",
+          "layer": "supporting"
+        }
+      ]
+    },
+    "自社": {
+      "purpose": {
+        "title": "社会価値創造事業",
+        "description": "持続可能な社会実現に貢献するビジネス"
+      },
+      "stakeholders": [
+        {
+          "id": "own-1",
+          "name": "代表取締役",
+          "role": "ビジョン策定",
+          "goal": "社会課題解決",
+          "category": "company",
+          "layer": "leading"
+        },
+        {
+          "id": "own-2",
+          "name": "事業開発チーム",
+          "role": "サービス企画",
+          "goal": "価値あるサービス創出",
+          "category": "company",
+          "layer": "leading"
+        },
+        {
+          "id": "own-3",
+          "name": "地域パートナー",
+          "role": "現場連携",
+          "goal": "地域課題解決",
+          "category": "citizen",
+          "layer": "leading"
+        },
+        {
+          "id": "own-4",
+          "name": "社会起業支援機関",
+          "role": "経営支援",
+          "goal": "持続可能経営実現",
+          "category": "expert",
+          "layer": "supporting"
+        },
+        {
+          "id": "own-5",
+          "name": "行政機関",
+          "role": "政策連携",
+          "goal": "社会システム改善",
+          "category": "government",
+          "layer": "supporting"
+        },
+        {
+          "id": "own-6",
+          "name": "エンドユーザー",
+          "role": "サービス利用",
+          "goal": "生活品質向上",
+          "category": "citizen",
           "layer": "supporting"
         }
       ]

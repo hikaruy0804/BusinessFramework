@@ -54,7 +54,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = JSON.parse(stored);
                 return {
                     timelineData: data.timelineData || defaultTimelineData,
-                    currentTimeline: data.currentTimeline || 'current'
+                    comparisonData: data.comparisonData || {},
+                    currentTimeline: data.currentTimeline || 'current',
+                    currentMode: data.currentMode || 'timeline',
+                    comparisonList: data.comparisonList || [],
+                    selectedComparison: data.selectedComparison || ''
                 };
             }
         } catch (error) {
@@ -62,7 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return {
             timelineData: defaultTimelineData,
-            currentTimeline: 'current'
+            comparisonData: {},
+            currentTimeline: 'current',
+            currentMode: 'timeline',
+            comparisonList: [],
+            selectedComparison: ''
         };
     }
 
@@ -70,12 +78,31 @@ document.addEventListener('DOMContentLoaded', () => {
     function saveToStorage() {
         try {
             // 現在のデータを保存前に更新
-            timelineData[currentTimeline].purpose = { ...purpose };
-            timelineData[currentTimeline].stakeholders = [...stakeholders];
+            if (currentMode === 'comparison') {
+                if (selectedComparison) {
+                    // 比較名称が選択されている場合のみ比較データに保存
+                    if (!comparisonData[selectedComparison]) {
+                        comparisonData[selectedComparison] = { purpose: {}, stakeholders: [] };
+                    }
+                    comparisonData[selectedComparison].purpose = { ...purpose };
+                    comparisonData[selectedComparison].stakeholders = [...stakeholders];
+                }
+                // 比較名称が選択されていない場合は保存処理をスキップ
+            } else {
+                // 単体モードと時系列モードの場合、時系列データに保存
+                // 単体モードの場合は常に「現在」に保存
+                const timelineKey = currentMode === 'single' ? 'current' : currentTimeline;
+                timelineData[timelineKey].purpose = { ...purpose };
+                timelineData[timelineKey].stakeholders = [...stakeholders];
+            }
             
             const dataToSave = {
                 currentTimeline,
-                timelineData
+                currentMode,
+                comparisonList,
+                selectedComparison,
+                timelineData,
+                comparisonData
             };
             localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
         } catch (error) {
@@ -86,13 +113,64 @@ document.addEventListener('DOMContentLoaded', () => {
     // データを初期化（LocalStorageから読み込み、なければデフォルト値を使用）
     const initialData = loadFromStorage();
     let timelineData = initialData.timelineData;
+    let comparisonData = initialData.comparisonData || {};
 
     // 現在選択されている時間軸（LocalStorageから復元）
     let currentTimeline = initialData.currentTimeline;
+    
+    // 現在のモード（単体、時系列、比較）
+    let currentMode = initialData.currentMode || 'timeline';
+    
+    // 比較名称リスト
+    let comparisonList = initialData.comparisonList || [];
+    
+    // 現在選択中の比較名称
+    let selectedComparison = initialData.selectedComparison || '';
 
-    // 現在のデータ（選択された時間軸のデータを参照）
-    let purpose = timelineData[currentTimeline].purpose;
-    let stakeholders = timelineData[currentTimeline].stakeholders;
+    // 現在のデータ（選択されたモードに応じてデータを参照）
+    let purpose, stakeholders;
+
+    function getCurrentData() {
+        if (currentMode === 'comparison') {
+            if (selectedComparison) {
+                // 比較名称が選択されている場合、選択された比較対象の独立したデータを使用
+                if (!comparisonData[selectedComparison]) {
+                    // 新しい比較対象の場合、デフォルトデータを作成
+                    comparisonData[selectedComparison] = {
+                        purpose: {
+                            title: 'タイトル',
+                            description: '共通の目的'
+                        },
+                        stakeholders: []
+                    };
+                }
+                return comparisonData[selectedComparison];
+            } else {
+                // 比較名称が選択されていない場合、空のデータを返す
+                return {
+                    purpose: {
+                        title: 'タイトル',
+                        description: '比較対象を選択してください'
+                    },
+                    stakeholders: []
+                };
+            }
+        } else {
+            // 単体モードと時系列モードは共通のデータを使用
+            // 単体モードの場合は常に「現在」のデータを参照
+            const timelineKey = currentMode === 'single' ? 'current' : currentTimeline;
+            return timelineData[timelineKey];
+        }
+    }
+
+    function updateCurrentData() {
+        const data = getCurrentData();
+        purpose = data.purpose;
+        stakeholders = data.stakeholders;
+    }
+
+    // 初期データを設定
+    updateCurrentData();
 
     const categoryColors = {
         company: '#69DB7C',    // 企業 → グリーン
@@ -103,6 +181,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- DOM Elements ---
     const timelineStatusSelect = document.getElementById('timeline-status');
+    const timelineSection = timelineStatusSelect.closest('.control-section');
+    const comparisonSection = document.getElementById('comparison-section');
+    const comparisonNameInput = document.getElementById('comparison-name');
+    const addComparisonBtn = document.getElementById('add-comparison-btn');
+    const comparisonDropdown = document.getElementById('comparison-dropdown');
+    const comparisonDropdownHeader = document.getElementById('comparison-dropdown-header');
+    const comparisonSelectedText = document.getElementById('comparison-selected-text');
+    const comparisonDropdownOptions = document.getElementById('comparison-dropdown-options');
+    const modeSingleBtn = document.getElementById('mode-single');
+    const modeTimelineBtn = document.getElementById('mode-timeline');
+    const modeComparisonBtn = document.getElementById('mode-comparison');
     const stakeholderNameInput = document.getElementById('stakeholder-name');
     const stakeholderRoleInput = document.getElementById('stakeholder-role');
     const stakeholderGoalInput = document.getElementById('stakeholder-goal');
@@ -145,6 +234,169 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentEditData = null;
     let confirmCallback = null;
 
+    // モード切り替え関数
+    function switchMode(mode) {
+        currentMode = mode;
+        
+        // モードボタンのアクティブ状態を更新
+        document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+        
+        if (mode === 'single') {
+            modeSingleBtn.classList.add('active');
+            timelineSection.style.display = 'block';
+            timelineStatusSelect.disabled = true;
+            timelineStatusSelect.style.opacity = '0.5';
+            comparisonSection.style.display = 'none';
+        } else if (mode === 'timeline') {
+            modeTimelineBtn.classList.add('active');
+            timelineSection.style.display = 'block';
+            timelineStatusSelect.disabled = false;
+            timelineStatusSelect.style.opacity = '1';
+            comparisonSection.style.display = 'none';
+        } else if (mode === 'comparison') {
+            modeComparisonBtn.classList.add('active');
+            timelineSection.style.display = 'none'; // 時間軸メニューを非表示
+            comparisonSection.style.display = 'block';
+        }
+        
+        // データを更新
+        updateCurrentData();
+        
+        // 入力検証を再実行
+        validateStakeholderInputs();
+        
+        // LocalStorageに保存
+        saveToStorage();
+        
+        // UIを更新
+        drawModel(true);
+    }
+
+    // 比較名称ドロップダウンを更新する関数
+    function updateComparisonDropdown() {
+        comparisonDropdownOptions.innerHTML = '';
+        
+        if (comparisonList.length > 0) {
+            comparisonDropdown.style.display = 'block';
+            
+            comparisonList.forEach(name => {
+                const option = document.createElement('div');
+                option.className = 'dropdown-option';
+                if (name === selectedComparison) {
+                    option.classList.add('selected');
+                }
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = name;
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'dropdown-delete-btn';
+                deleteBtn.textContent = '×';
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    removeComparisonName(name);
+                };
+                
+                option.appendChild(nameSpan);
+                option.appendChild(deleteBtn);
+                
+                option.onclick = (e) => {
+                    if (e.target !== deleteBtn) {
+                        selectedComparison = name;
+                        updateCurrentData(); // データを更新
+                        updateComparisonDropdown();
+                        closeDropdown();
+                        validateStakeholderInputs(); // 入力検証を再実行
+                        saveToStorage();
+                        drawModel(true);
+                    }
+                };
+                
+                comparisonDropdownOptions.appendChild(option);
+            });
+            
+            // 選択されたテキストを更新
+            comparisonSelectedText.textContent = selectedComparison || '比較対象を選択';
+        } else {
+            comparisonDropdown.style.display = 'none';
+        }
+    }
+
+    // ドロップダウンを開く/閉じる関数
+    function toggleDropdown() {
+        const options = comparisonDropdownOptions;
+        const header = comparisonDropdownHeader;
+        
+        if (options.classList.contains('show')) {
+            closeDropdown();
+        } else {
+            options.classList.add('show');
+            header.classList.add('active');
+        }
+    }
+
+    function closeDropdown() {
+        comparisonDropdownOptions.classList.remove('show');
+        comparisonDropdownHeader.classList.remove('active');
+    }
+
+    // 比較名称を追加する関数
+    function addComparisonName() {
+        const name = comparisonNameInput.value.trim();
+        if (name && !comparisonList.includes(name)) {
+            comparisonList.push(name);
+            selectedComparison = name;
+            comparisonNameInput.value = '';
+            updateComparisonDropdown();
+            updateCurrentData(); // データを更新
+            validateStakeholderInputs(); // 入力検証を再実行
+            saveToStorage();
+            drawModel(true);
+        }
+    }
+
+    // 比較名称を削除する関数
+    function removeComparisonName(name) {
+        const index = comparisonList.indexOf(name);
+        if (index > -1) {
+            comparisonList.splice(index, 1);
+            
+            // 対応するデータも削除
+            if (comparisonData[name]) {
+                delete comparisonData[name];
+            }
+            
+            if (selectedComparison === name) {
+                selectedComparison = comparisonList.length > 0 ? comparisonList[0] : '';
+            }
+            
+            // データを更新
+            updateCurrentData();
+            updateComparisonDropdown();
+            
+            // 入力検証を再実行
+            validateStakeholderInputs();
+            
+            saveToStorage();
+            drawModel(true);
+        }
+    }
+
+    // UI初期化関数
+    function initializeUI() {
+        // モードボタンの初期状態を設定
+        switchMode(currentMode);
+        
+        // 時間軸セレクトの初期値を設定
+        timelineStatusSelect.value = currentTimeline;
+        
+        // 比較名称の初期化
+        updateComparisonDropdown();
+        
+        // 入力検証を実行
+        validateStakeholderInputs();
+    }
+
     // 入力フィールドの検証
     function validateStakeholderInputs() {
         const name = stakeholderNameInput.value.trim();
@@ -158,7 +410,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const roleValid = role && role.length <= 10;
         const goalValid = goal && goal.length <= 20;
         
-        const isValid = nameValid && roleValid && goalValid && category && layer;
+        // 比較モードの場合、比較名称が選択されているかチェック
+        const comparisonValid = currentMode !== 'comparison' || selectedComparison;
+        
+        const isValid = nameValid && roleValid && goalValid && category && layer && comparisonValid;
         addStakeholderBtn.disabled = !isValid;
         
         // ボタンの見た目も変更
@@ -178,15 +433,50 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('input', validateStakeholderInputs);
         input.addEventListener('change', validateStakeholderInputs);
     });
+
+    // モード選択のイベントリスナー
+    modeSingleBtn.addEventListener('click', () => switchMode('single'));
+    modeTimelineBtn.addEventListener('click', () => switchMode('timeline'));
+    modeComparisonBtn.addEventListener('click', () => switchMode('comparison'));
+
+    // 比較名称追加のイベントリスナー
+    addComparisonBtn.addEventListener('click', addComparisonName);
+    
+    comparisonNameInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            addComparisonName();
+        }
+    });
+
+    // カスタムドロップダウンのイベントリスナー
+    comparisonDropdownHeader.addEventListener('click', toggleDropdown);
+    
+    // ドロップダウン外をクリックしたら閉じる
+    document.addEventListener('click', (e) => {
+        if (!comparisonDropdown.contains(e.target)) {
+            closeDropdown();
+        }
+    });
+
     timelineStatusSelect.addEventListener('change', (e) => {
         // 現在のデータを保存
-        timelineData[currentTimeline].purpose = { ...purpose };
-        timelineData[currentTimeline].stakeholders = [...stakeholders];
+        if (currentMode === 'comparison' && selectedComparison) {
+            // 比較モードの場合、比較データに保存
+            if (!comparisonData[selectedComparison]) {
+                comparisonData[selectedComparison] = { purpose: {}, stakeholders: [] };
+            }
+            comparisonData[selectedComparison].purpose = { ...purpose };
+            comparisonData[selectedComparison].stakeholders = [...stakeholders];
+        } else {
+            // 時系列モードの場合、現在の時系列データに保存
+            // （単体モードの場合はこのイベントは発生しない）
+            timelineData[currentTimeline].purpose = { ...purpose };
+            timelineData[currentTimeline].stakeholders = [...stakeholders];
+        }
         
         // 新しい時間軸に切り替え
         currentTimeline = e.target.value;
-        purpose = timelineData[currentTimeline].purpose;
-        stakeholders = timelineData[currentTimeline].stakeholders;
+        updateCurrentData();
         
         // LocalStorageに保存
         saveToStorage();
@@ -202,6 +492,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return; // 無効な入力の場合は処理を中断
         }
         
+        // 比較モードの場合、比較名称が選択されているかチェック
+        if (currentMode === 'comparison' && !selectedComparison) {
+            showAlert('エラー', '比較名称を追加・選択してからステークホルダーを追加してください。');
+            return;
+        }
+        
         const newStakeholder = {
             id: uuidv4(),
             name: stakeholderNameInput.value.trim(),
@@ -210,8 +506,20 @@ document.addEventListener('DOMContentLoaded', () => {
             category: stakeholderCategoryInput.value,
             layer: stakeholderLayerInput.value
         };
+        
         stakeholders.push(newStakeholder);
-        timelineData[currentTimeline].stakeholders.push(newStakeholder);
+        
+        // データを適切な場所に保存
+        if (currentMode === 'comparison' && selectedComparison) {
+            if (!comparisonData[selectedComparison]) {
+                comparisonData[selectedComparison] = { purpose: {}, stakeholders: [] };
+            }
+            comparisonData[selectedComparison].stakeholders.push(newStakeholder);
+        } else {
+            const timelineKey = currentMode === 'single' ? 'current' : currentTimeline;
+            timelineData[timelineKey].stakeholders.push(newStakeholder);
+        }
+        
         saveToStorage(); // 自動保存
         drawModel(true); // 要素追加時はアニメーション付き
         clearInputFields();
@@ -295,11 +603,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             };
             
+            // 比較データもリセット
+            comparisonData = {};
+            comparisonList = [];
+            selectedComparison = '';
+            
+            // モードを時系列にリセット
+            currentMode = 'timeline';
+            
             // 現在の時間軸を「現在」にリセット
             currentTimeline = 'current';
             timelineStatusSelect.value = 'current';
-            purpose = timelineData[currentTimeline].purpose;
-            stakeholders = timelineData[currentTimeline].stakeholders;
+            
+            // データを更新
+            updateCurrentData();
+            
+            // UIを初期化
+            initializeUI();
             
             // LocalStorageもクリア
             saveToStorage();
@@ -319,22 +639,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     const data = JSON.parse(e.target.result);
                     
-                    // 新形式（時間軸対応）の場合
+                    // 新形式（モード・比較対応）の場合
                     if (data.timelineData) {
                         timelineData = data.timelineData;
+                        comparisonData = data.comparisonData || {};
                         currentTimeline = data.currentTimeline || 'current';
+                        currentMode = data.currentMode || 'timeline';
+                        comparisonList = data.comparisonList || [];
+                        selectedComparison = data.selectedComparison || '';
+                        
                         timelineStatusSelect.value = currentTimeline;
                     } 
                     // 旧形式（時間軸なし）の場合は現在に設定
                     else if (data.purpose && data.stakeholders) {
                         timelineData.current.purpose = data.purpose;
                         timelineData.current.stakeholders = data.stakeholders;
+                        comparisonData = {};
                         currentTimeline = 'current';
+                        currentMode = 'timeline';
+                        comparisonList = [];
+                        selectedComparison = '';
                         timelineStatusSelect.value = 'current';
                     }
                     
-                    purpose = timelineData[currentTimeline].purpose;
-                    stakeholders = timelineData[currentTimeline].stakeholders;
+                    // データを更新
+                    updateCurrentData();
+                    
+                    // UIを初期化
+                    initializeUI();
                     
                     // LocalStorageに保存
                     saveToStorage();
@@ -351,12 +683,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     saveJsonBtn.addEventListener('click', () => {
         // 現在のデータを保存してから出力
-        timelineData[currentTimeline].purpose = { ...purpose };
-        timelineData[currentTimeline].stakeholders = [...stakeholders];
+        saveToStorage(); // 現在のデータを確実に保存
         
         const data = { 
             currentTimeline,
-            timelineData 
+            currentMode,
+            comparisonList,
+            selectedComparison,
+            timelineData,
+            comparisonData
         };
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
         saveAs(blob, 'purpose-model.json');
@@ -596,44 +931,77 @@ document.addEventListener('DOMContentLoaded', () => {
                 .style("stroke", "#2F3E46") // ダークグリーングレー
                 .style("stroke-width", "6px");
 
-            // 「共創」ラベル（上側）
-            if (supportingStakeholders.length > 0) {
-                const supportingLabel = g.append("text")
-                    .attr("x", 0)
-                    .attr("y", -(outerRadius + 50)) // 名前の外側配置を考慮して位置調整
-                    .attr("text-anchor", "middle")
-                    .style("font-size", "20px")
-                    .style("font-weight", "bold")
-                    .style("fill", "#2F3E46") // ダークグリーングレー
-                    .text("共創のステークホルダー");
-                    
-                if (animate) {
-                    supportingLabel
-                        .style("opacity", 0)
-                        .transition()
-                        .duration(duration)
-                        .delay(600)
-                        .style("opacity", 1);
-                }
+            // 「共創」ラベル（上側）- 常に表示
+            const supportingLabel = g.append("text")
+                .attr("x", 0)
+                .attr("y", -(outerRadius + 50)) // 名前の外側配置を考慮して位置調整
+                .attr("text-anchor", "middle")
+                .style("font-size", "20px")
+                .style("font-weight", "bold")
+                .style("fill", "#2F3E46") // ダークグリーングレー
+                .text("共創のステークホルダー");
+                
+            if (animate) {
+                supportingLabel
+                    .style("opacity", 0)
+                    .transition()
+                    .duration(duration)
+                    .delay(600)
+                    .style("opacity", 1);
             }
 
-            // 「主体」ラベル（下側）
-            if (leadingStakeholders.length > 0) {
-                const leadingLabel = g.append("text")
+            // 「主体」ラベル（下側）- 常に表示
+            const leadingLabel = g.append("text")
+                .attr("x", 0)
+                .attr("y", outerRadius + 65) // 名前の外側配置を考慮して位置調整
+                .attr("text-anchor", "middle")
+                .style("font-size", "20px")
+                .style("font-weight", "bold")
+                .style("fill", "#2F3E46") // ダークグリーングレー
+                .text("主体のステークホルダー");
+                
+            if (animate) {
+                leadingLabel
+                    .style("opacity", 0)
+                    .transition()
+                    .duration(duration)
+                    .delay(600)
+                    .style("opacity", 1);
+            }
+            
+            // モードに応じて追加の説明テキストを表示
+            let additionalText = "";
+            if (currentMode === 'timeline') {
+                // 時系列モードの場合のみ時系列名称を表示
+                const timelineLabels = {
+                    'current': '現在',
+                    'past': '過去',
+                    'near-future': '数年先',
+                    'future': '将来'
+                };
+                additionalText = timelineLabels[currentTimeline] || currentTimeline;
+            } else if (currentMode === 'comparison' && selectedComparison) {
+                // 比較モードの場合は比較名称を表示
+                additionalText = selectedComparison;
+            }
+            // 単体モードの場合は追加テキストなし
+            
+            if (additionalText) {
+                const additionalLabel = g.append("text")
                     .attr("x", 0)
-                    .attr("y", outerRadius + 65) // 名前の外側配置を考慮して位置調整
+                    .attr("y", outerRadius + 85) // 主体ラベルの下に配置
                     .attr("text-anchor", "middle")
-                    .style("font-size", "20px")
-                    .style("font-weight", "bold")
-                    .style("fill", "#2F3E46") // ダークグリーングレー
-                    .text("主体のステークホルダー");
+                    .style("font-size", "14px") // 小さめのフォントサイズ
+                    .style("font-weight", "normal")
+                    .style("fill", "#666") // 少し薄い色
+                    .text(`(${additionalText})`);
                     
                 if (animate) {
-                    leadingLabel
+                    additionalLabel
                         .style("opacity", 0)
                         .transition()
                         .duration(duration)
-                        .delay(600)
+                        .delay(700)
                         .style("opacity", 1);
                 }
             }
@@ -1030,6 +1398,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Init ---
+    // UI初期化
+    initializeUI();
+    
     // 初期値をフォームに設定
     timelineStatusSelect.value = currentTimeline; // 復元された時間軸を設定
     updateUI();

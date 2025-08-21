@@ -27,6 +27,14 @@
         <div class="container">
             <div id="controls" class="control-panel">
                 <div class="control-section">
+                    <h2>モード選択</h2>
+                    <div class="mode-selection">
+                        <button id="mode-single" class="mode-btn">単体</button>
+                        <button id="mode-timeline" class="mode-btn active">時系列</button>
+                        <button id="mode-comparison" class="mode-btn">比較</button>
+                    </div>
+                </div>
+                <div class="control-section">
                     <h2>時間軸</h2>
                     <select id="timeline-status">
                         <option value="current">現在</option>
@@ -35,11 +43,25 @@
                         <option value="future">将来</option>
                     </select>
                 </div>
+                <div class="control-section" id="comparison-section" style="display: none;">
+                    <h2>比較名称</h2>
+                    <div class="comparison-input-group">
+                        <input type="text" id="comparison-name" placeholder="比較する名称を入力" maxlength="20">
+                        <button id="add-comparison-btn">追加</button>
+                    </div>
+                    <div id="comparison-dropdown" class="custom-dropdown" style="display: none;">
+                        <div class="dropdown-header" id="comparison-dropdown-header">
+                            <span id="comparison-selected-text">比較対象を選択</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <div class="dropdown-options" id="comparison-dropdown-options"></div>
+                    </div>
+                </div>
                 <div class="control-section">
                     <h2>ステークホルダー追加</h2>
                     <input type="text" id="stakeholder-name" placeholder="名前" maxlength="10">
                     <input type="text" id="stakeholder-role" placeholder="役割" maxlength="10">
-                    <textarea id="stakeholder-goal" placeholder="目的" rows="3" maxlength="20"></textarea>
+                    <textarea id="stakeholder-goal" placeholder="目的" rows="2" maxlength="20"></textarea>
                     <select id="stakeholder-category">
                         <option value="company">企業</option>
                         <option value="government">行政</option>
