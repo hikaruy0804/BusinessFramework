@@ -9,7 +9,6 @@
             size: A4;
             margin: 20mm;
         }
-        
         body {
             font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif;
             line-height: 1.6;
@@ -18,7 +17,6 @@
             margin: 0;
             padding: 0;
         }
-        
         .slide {
             width: 210mm;
             min-height: 297mm;
@@ -28,21 +26,20 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             page-break-after: always;
             box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
         }
-        
         .slide:last-child {
             page-break-after: avoid;
         }
-        
         h1 {
             color: #2F3E46;
             font-size: 28px;
             text-align: center;
             margin-bottom: 30px;
-            border-bottom: 3px solid #69DB7C;
+            border-bottom: 3px solid #5C7CFA;
             padding-bottom: 10px;
         }
-        
         h2 {
             color: #2F3E46;
             font-size: 24px;
@@ -51,14 +48,12 @@
             border-left: 5px solid #FFD43B;
             padding-left: 15px;
         }
-        
         h3 {
             color: #2F3E46;
             font-size: 20px;
             margin-top: 25px;
             margin-bottom: 15px;
         }
-        
         .step {
             background: #F8F9FA;
             padding: 15px;
@@ -66,7 +61,6 @@
             border-radius: 8px;
             border-left: 4px solid #5C7CFA;
         }
-        
         .step-number {
             background: #5C7CFA;
             color: white;
@@ -79,7 +73,6 @@
             font-weight: bold;
             margin-right: 10px;
         }
-        
         .color-box {
             display: inline-block;
             width: 20px;
@@ -88,26 +81,11 @@
             border-radius: 4px;
             vertical-align: middle;
         }
-        
-        .company { background: #69DB7C; }
-        .government { background: #FFD43B; }
-        .citizen { background: #FF8A65; }
-        .expert { background: #5C7CFA; }
-        
-        ul {
-            padding-left: 20px;
-        }
-        
-        li {
-            margin-bottom: 8px;
-        }
-        
         .highlight {
             background: #FFE066;
             padding: 2px 6px;
             border-radius: 4px;
         }
-        
         .warning {
             background: #FFF3CD;
             border: 1px solid #FFEAA7;
@@ -115,7 +93,6 @@
             border-radius: 8px;
             margin: 15px 0;
         }
-        
         .info {
             background: #D1ECF1;
             border: 1px solid #BEE5EB;
@@ -123,16 +100,28 @@
             border-radius: 8px;
             margin: 15px 0;
         }
-        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #DEE2E6;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #F8F9FA;
+            font-weight: bold;
+        }
         .footer {
             text-align: center;
             font-size: 12px;
             color: #6C757D;
-            margin-top: 30px;
+            margin-top: auto;
             border-top: 1px solid #DEE2E6;
             padding-top: 15px;
         }
-        
         @media print {
             body { background: white; }
             .slide { 
@@ -148,7 +137,7 @@
 
 <!-- スライド1: タイトル -->
 <div class="slide">
-    <h1 style="border-bottom: 3px solid #5C7CFA;">(修正中)Business Framework - 使い方ガイド</h1>
+    <h1 style="border-bottom: 3px solid #5C7CFA;">Business Framework - 使い方ガイド</h1>
     <div style="text-align: center; margin-top: 40px;">
         <p style="font-size: 18px;">
             このガイドでは、２つの事業設計ツール「パーパスモデル」と「ロジックモデル」の使い方を説明します。
@@ -166,267 +155,39 @@
     </div>
 
     <div class="footer">
-        Business Framework - 使い方ガイド
+        Business Framework - 使い方ガイド | 更新日: 2025年8月22日
     </div>
 </div>
 
-<!-- スライド2: パーパスモデル - 基本的な使い方 -->
+<!-- スライド2: パーパスモデル - 3つのモードと基本操作 -->
 <div class="slide">
-    <h1>🎨 パーパスモデル - 基本的な使い方</h1>
+    <h1>🎨 パーパスモデル - 3つのモードと基本操作</h1>
+    
+    <h2>3つのモード</h2>
+    <p>パーパスモデルは、用途に応じて3つのモードを切り替えられます。</p>
+    <ul>
+        <li><strong>単体モード:</strong> シンプルな単一プロジェクトのパーパスモデルを作成します。</li>
+        <li><strong>時系列モード:</strong> 「現在」「過去」「数年先」「将来」の時間軸でプロジェクトの変化を管理します。</li>
+        <li><strong>比較モード:</strong> 競合他社や類似事例など、複数の対象を独立して作成・比較検討します。</li>
+    </ul>
 
+    <h2>基本的な使い方</h2>
     <div class="step">
         <span class="step-number">1</span>
-        <strong>開始方法</strong><br>
-        - <code>index.html</code> をブラウザで開くと、空のキャンバスが表示されます。<br>
-        - <strong>サンプルを見る場合:</strong> 画面上部の「データ読込」ボタンをクリックし、<code>sample-data.json</code>を選択してください。
+        <strong>起動とモード選択</strong><br>
+        - アプリケーションを開くと、編集画面が表示されます。<br>
+        - 画面左のパネル上部で、利用したいモードを選択します。
     </div>
-
     <div class="step">
         <span class="step-number">2</span>
-        <strong>時間軸の選択</strong><br>
-        画面左上のドロップダウンで時間軸を選択<br>
-        現在 / 過去 / 数年先 / 将来 の4つから選択可能
-    </div>
-
-    <div class="step">
-        <span class="step-number">3</span>
         <strong>共通目的の設定</strong><br>
-        中央の円をダブルクリックして編集<br>
-        • タイトル：<span class="highlight">10文字以内</span><br>
-        • 説明：<span class="highlight">20文字以内</span>
+        - 中央の円をダブルクリックして編集します。<br>
+        - タイトルと説明を入力して「保存」をクリックします。
     </div>
-
-    <div class="footer">
-        Business Framework - 使い方ガイド
-    </div>
-</div>
-
-<!-- スライド3: ステークホルダー管理 -->
-<div class="slide">
-    <h1>🎨 パーパスモデル - ステークホルダー管理</h1>
-    
-    <div class="step">
-        <span class="step-number">4</span>
-        <strong>ステークホルダーの追加</strong><br>
-        左パネルから情報を入力して「追加」ボタンをクリック
-    </div>
-    
-    <h3>📝 入力項目と文字数制限</h3>
-    <ul>
-        <li><strong>名前</strong>：<span class="highlight">10文字以内</span></li>
-        <li><strong>役割</strong>：<span class="highlight">10文字以内</span></li>
-        <li><strong>目的</strong>：<span class="highlight">20文字以内</span></li>
-        <li><strong>カテゴリ</strong>：企業/行政/住民/専門家から選択</li>
-        <li><strong>配置</strong>：上段(共創)/下段(主体)から選択</li>
-    </ul>
-    
-    <div class="step">
-        <span class="step-number">5</span>
-        <strong>編集・削除</strong><br>
-        • 円弧上の文字をダブルクリックで編集<br>
-        • 編集モーダルの「削除」ボタンで削除
-    </div>
-    
-    <div class="footer">
-        Business Framework - 使い方ガイド
-    </div>
-</div>
-
-<!-- スライド4: 保存・出力 -->
-<div class="slide">
-    <h1>🎨 パーパスモデル - 保存・出力</h1>
-    
-    <div class="step">
-        <span class="step-number">6</span>
-        <strong>保存・出力方法</strong>
-    </div>
-    
-    <h3>📤 出力オプション</h3>
-    <ul>
-        <li><strong>データ保存</strong>：JSON形式で保存（再編集可能）</li>
-        <li><strong>PNG出力</strong>：画像として保存（1000×800px）</li>
-        <li><strong>データ読込</strong>：保存したJSONファイルを読み込み</li>
-    </ul>
-    
-    <div class="info">
-        <strong>💡 自動保存機能</strong><br>
-        入力内容は自動的にブラウザに保存されるため、<br>
-        画面を更新しても内容が保持されます。
-    </div>
-    
-    <h3>🎨 色分けについて</h3>
-    <ul>
-        <li><span class="color-box company"></span><strong>企業</strong>：グリーン</li>
-        <li><span class="color-box government"></span><strong>行政</strong>：イエロー</li>
-        <li><span class="color-box citizen"></span><strong>住民</strong>：コーラルオレンジ</li>
-        <li><span class="color-box expert"></span><strong>専門家</strong>：ブルー</li>
-    </ul>
-    
-    <div class="footer">
-        Business Framework - 使い方ガイド
-    </div>
-</div>
-
-<!-- スライド5: パーパスモデル - ファイル構成と便利な機能 -->
-<div class="slide">
-    <h1>🎨 パーパスモデル - ファイル構成と便利な機能</h1>
-
-    <h2>📄 主なファイル構成</h2>
-    <ul>
-        <li><strong>index.html</strong> - アプリケーションのメインファイル</li>
-        <li><strong>script.js</strong> - プログラム本体</li>
-        <li><strong>style.css</strong> - デザイン定義ファイル</li>
-        <li><strong>sample-data.json</strong> - サンプルデータ</li>
-    </ul>
-
-    <h2>⚡ 便利な機能</h2>
-    <ul>
-        <li><strong>自動保存</strong>：入力内容は自動的にブラウザに保存される</li>
-        <li><strong>レスポンシブ</strong>：スマートフォンでも利用可能</li>
-        <li><strong>時間軸管理</strong>：複数の時間軸でモデルを管理</li>
-        <li><strong>アニメーション</strong>：要素の追加・削除時にスムーズな動作</li>
-    </ul>
-
-    <div class="warning">
-        <strong>⚠️ 注意事項</strong><br>
-        • サーバー不要：完全にローカルで動作<br>
-        • ブラウザ推奨：Chrome, Firefox, Safari, Edge<br>
-        • データ保存：LocalStorageとファイル保存の両方に対応
-    </div>
-
-    <div class="footer">
-        Business Framework - 使い方ガイド
-    </div>
-</div>
-
-<!-- スライド6: トラブルシューティング -->
-<div class="slide">
-    <h1>🎨 パーパスモデル - トラブルシューティング</h1>
-    
-    <h2>❓ よくある問題と解決方法</h2>
-    
-    <div class="step">
-        <strong>Q: ボタンが押せない</strong><br>
-        A: 入力欄がすべて埋まっているか、文字数制限を確認してください
-    </div>
-    
-    <div class="step">
-        <strong>Q: データが消えた</strong><br>
-        A: ブラウザのLocalStorageに自動保存されているため、<br>
-        　 同じブラウザで開き直すと復元されます
-    </div>
-    
-    <div class="step">
-        <strong>Q: PNG出力がうまくいかない</strong><br>
-        A: ブラウザを最新版に更新、または別のブラウザで試してください
-    </div>
-    
-    <div class="info">
-        <strong>💡 推奨環境</strong><br>
-        • Chrome 90以上<br>
-        • Firefox 88以上<br>
-        • Safari 14以上<br>
-        • Edge 90以上
-    </div>
-    
-    <div class="footer">
-        作成者：Amazon Q | 更新日：2025年8月8日
-    </div>
-</div>
-
-
-<!-- スライド7: Logic Model Creator - 使い方ガイド -->
-<div class="slide">
-    <h1>📊 ロジックモデル - 使い方ガイド</h1>
-    <div class="info">
-        <p>事業の投入資源（インプット）から、活動、産出（アウトプット）、成果（アウトカム）への論理的なつながりを可視化する計画・評価ツールです。</p>
-    </div>
-
-    <h2>起動と基本操作</h2>
-
-    <div class="step">
-        <span class="step-number">1</span>
-        <strong>起動方法</strong><br>
-        - <code>index.html</code> をブラウザで開くと、サンプルデータが読み込まれた状態で開始します。<br>
-        - <strong>空の状態で始めたい場合:</strong> 画面上部の「新規作成」ボタンをクリックしてください。
-    </div>
-
-    <div class="step">
-        <span class="step-number">2</span>
-        <strong>新しい項目（カード）の追加</strong><br>
-        1. 画面左のパネルにある「＋項目追加」ボタンをクリックします。<br>
-        2. 表示されたウィンドウに、項目の内容を入力し、カテゴリを選択します。<br>
-        3. 「追加」ボタンをクリックすると、新しいカードがキャンバスに追加されます。
-    </div>
-
     <div class="step">
         <span class="step-number">3</span>
-        <strong>項目（カード）の編集・削除</strong><br>
-        - 編集したいカードを「ダブルクリック」します。<br>
-        - 表示されたウィンドウで、内容の編集やカテゴリの変更ができます。<br>
-        - 「保存」ボタンで変更を保存し、「削除」ボタンでカードを削除します。
-    </div>
-    <div class="footer">
-        Logic Model Creator - 使い方ガイド
-    </div>
-</div>
-
-<!-- スライド8: Logic Model Creator - 詳細操作 -->
-<div class="slide">
-    <h1>📊 ロジックモデル - 詳細操作</h1>
-
-    <h2>カードの移動と関連付け</h2>
-
-    <div class="step">
-        <span class="step-number">4</span>
-        <strong>項目（カード）の移動</strong><br>
-        - 移動したいカードをマウスでドラッグ＆ドロップすることで、カラム内での順序を入れ替えたり、他のカラムへ移動したりできます。
-    </div>
-
-    <div class="step">
-        <span class="step-number">5</span>
-        <strong>項目間に矢印を引く</strong><br>
-        1. 矢印の始点にしたいカードを一度クリックします。（カードの枠がピンクの破線に変わります）<br>
-        2. 次に、矢印の終点にしたいカードをクリックします。<br>
-        3. ２つのカードが矢印で結ばれます。<br>
-        <span class="highlight">※ 同じカテゴリ内のカード同士は矢印で結べません。</span>
-    </div>
-
-    <div class="step">
-        <span class="step-number">6</span>
-        <strong>矢印の削除</strong><br>
-        - 削除したい矢印を「ダブルクリック」すると、確認メッセージが表示された後、削除されます。
-    </div>
-    <div class="footer">
-        Logic Model Creator - 使い方ガイド
-    </div>
-</div>
-
-<!-- スライド9: ロジックモデル - データ管理 -->
-<div class="slide">
-    <h1>📊 ロジックモデル - データ管理</h1>
-
-    <h2>データの保存と読み込み</h2>
-
-    <div class="step">
-        <span class="step-number">7</span>
-        <strong>作業内容をファイルに保存する</strong><br>
-        - 画面上部にある「データ保存」ボタンをクリックしてください。<br>
-        - `logic-model-(日付).json` という名前のファイルがダウンロードされます。
-    </div>
-
-    <div class="step">
-        <span class="step-number">8</span>
-        <strong>ファイルからデータを読み込む</strong><br>
-        1. 画面上部にある「データ読込」ボタンをクリックします。<br>
-        2. ファイル選択画面が開くので、以前に保存したJSONファイルを選択してください。<br>
-        3. キャンバスにデータが読み込まれます。<br>
-        <span class="warning"><strong>⚠️ 注意：</strong>現在表示されている内容は上書きされます。</span>
-    </div>
-
-    <div class="warning">
-        <strong>⚠️ PNG出力について</strong><br>
-        現在、「PNG出力」ボタンは機能していません。今後のアップデートで対応予定です。
+        <strong>ステークホルダーの追加</strong><br>
+        - 左パネルのフォームに情報を入力し、「追加」ボタンをクリックします。
     </div>
 
     <div class="footer">
@@ -434,22 +195,152 @@
     </div>
 </div>
 
-<!-- スライド10: ロジックモデル - ファイル構成 -->
+<!-- スライド3: パーパスモデル - モード別利用ガイド -->
 <div class="slide">
-    <h1>📊 ロジックモデル - ファイル構成</h1>
+    <h1>🎨 パーパスモデル - モード別利用ガイド</h1>
 
-    <h2>📄 主なファイル構成</h2>
+    <h2>🎯 単体モード</h2>
+    <div class="info">
+        <p><strong>用途:</strong> シンプルな単一プロジェクトのパーパスモデル作成<br>
+        最もシンプルなモードです。パーパスとステークホルダーを入力するだけで完成します。</p>
+    </div>
+
+    <h2>⏰ 時系列モード</h2>
+    <div class="info">
+        <p><strong>用途:</strong> プロジェクトの時間的な変化を管理<br>
+        1. 左パネルのドロップダウンで時間軸（現在・過去・数年先・将来）を選択します。<br>
+        2. 各時間軸でパーパスとステークホルダーを入力・編集します。<br>
+        3. 時間軸を切り替えて、プロジェクトの変化を確認します。<br>
+        <span class="highlight">※「現在」のデータは単体モードと共有されます。</span></p>
+    </div>
+
+    <h2>🔄 比較モード</h2>
+    <div class="info">
+        <p><strong>用途:</strong> 競合他社、類似事例、複数案の比較検討<br>
+        1. 左パネルで比較名称を入力し「追加」ボタンをクリックします。<br>
+        2. ドロップダウンから編集したい比較対象を選択します。<br>
+        3. 各比較対象のパーパスとステークホルダーを入力します。<br>
+        <span class="highlight">※各比較対象のデータは完全に独立しています。</span></p>
+    </div>
+
+    <div class="footer">
+        Business Framework - 使い方ガイド
+    </div>
+</div>
+
+<!-- スライド4: パーパスモデル - 編集とデータ管理 -->
+<div class="slide">
+    <h1>🎨 パーパスモデル - 編集とデータ管理</h1>
+
+    <h2>編集・削除</h2>
     <ul>
-        <li><strong>index.html</strong> - アプリケーションのメインファイル</li>
-        <li><strong>script.js</strong> - プログラム本体</li>
-        <li><strong>style.css</strong> - デザイン定義ファイル</li>
-        <li><strong>sample-logic-model.json</strong> - サンプルデータ</li>
+        <li><strong>編集:</strong> 編集したい要素（共通目的・ステークホルダー）をダブルクリックします。</li>
+        <li><strong>削除:</strong> 編集モーダル内にある「削除」ボタンをクリックします。</li>
     </ul>
 
-    <div class="info">
+    <h2>データ管理</h2>
+    <ul>
+        <li><strong>データ保存:</strong> 作成したデータを、後から再編集できるファイル形式で保存します。</li>
+        <li><strong>データ読込:</strong> 保存したファイルを読み込み、編集を再開します。</li>
+        <li><strong>PNG出力:</strong> 現在表示しているモデルを画像として保存します。プレゼン資料などへの貼り付けに便利です。</li>
+        <li><strong>新規作成:</strong> すべてのデータをリセットして、新しいプロジェクトを開始します。</li>
+    </ul>
+
+    <div class="warning">
         <strong>💡 自動保存機能</strong><br>
-        入力内容は自動的にブラウザのLocalStorageに保存されるため、画面を更新しても内容が保持されます。
+        すべての変更は自動的にブラウザに保存されます。画面を閉じたり更新したりしても、前回作業した状態から再開できます。
     </div>
+
+    <div class="footer">
+        Business Framework - 使い方ガイド
+    </div>
+</div>
+
+<!-- スライド5: ロジックモデル - 概要と基本操作 -->
+<div class="slide">
+    <h1>📊 ロジックモデル - 概要と基本操作</h1>
+    <p>事業の論理的な因果関係を「インプット → 活動 → アウトプット → アウトカム → インパクト」という流れで整理するツールです。</p>
+    
+    <h2>6つのステージ</h2>
+    <table>
+        <tr>
+            <th style="background-color: #FEF3C7;">インプット (投入)</th>
+            <td>事業に必要な資源（人材、予算、情報など）</td>
+        </tr>
+        <tr>
+            <th style="background-color: #FED7AA;">アクティビティ (活動)</th>
+            <td>投入した資源を使って行う具体的な活動</td>
+        </tr>
+        <tr>
+            <th style="background-color: #E9D5FF;">アウトプット (産出)</th>
+            <td>活動によって直接生み出される成果物やサービス</td>
+        </tr>
+        <tr>
+            <th style="background-color: #D1FAE5;">短期アウトカム (短期成果)</th>
+            <td>アウトプットによってもたらされる短期的な変化</td>
+        </tr>
+        <tr>
+            <th style="background-color: #BFDBFE;">中期アウトカム (中期成果)</th>
+            <td>短期的な成果が積み重なって生まれる中期的な変化</td>
+        </tr>
+        <tr>
+            <th style="background-color: #FBCFE8;">インパクト (長期的影響)</th>
+            <td>事業が最終的に目指す長期的・社会的な影響</td>
+        </tr>
+    </table>
+
+    <h2>基本操作</h2>
+    <div class="step">
+        <span class="step-number">1</span>
+        <strong>項目の追加</strong><br>
+        「＋項目追加」ボタンから、内容（30文字以内）とステージを入力して追加します。
+    </div>
+    <div class="step">
+        <span class="step-number">2</span>
+        <strong>項目の編集・削除</strong><br>
+        項目をダブルクリックすると編集モーダルが開きます。内容の変更やステージの変更、項目の削除ができます。
+    </div>
+
+    <div class="footer">
+        Business Framework - 使い方ガイド
+    </div>
+</div>
+
+<!-- スライド6: ロジックモデル - 接続ルールとデータ管理 -->
+<div class="slide">
+    <h1>📊 ロジックモデル - 接続ルールとデータ管理</h1>
+
+    <h2>項目間の接続</h2>
+    <div class="step">
+        <span class="step-number">1</span>
+        <strong>矢印の作成</strong><br>
+        始点となる項目をクリック後、終点となる項目をクリックすると矢印が引かれます。
+    </div>
+    <div class="step">
+        <span class="step-number">2</span>
+        <strong>矢印の削除</strong><br>
+        削除したい矢印をダブルクリックします。
+    </div>
+
+    <div class="warning">
+        <h3>接続ルール</h3>
+        矢印は、論理的な流れに沿って、<span class="highlight">隣接するステージ間</span>でのみ、<span class="highlight">左から右</span>の方向（インプット → インパクト）に接続できます。<br>
+        <strong>許可される接続例:</strong>
+        <ul>
+            <li>インプット → アクティビティ</li>
+            <li>アクティビティ → アウトプット</li>
+            <li>アウトプット → 短期アウトカム など</li>
+        </ul>
+        <strong>禁止される接続:</strong> 同じステージ内、ステージを飛ばした接続、右から左への逆方向の接続はできません。
+    </div>
+
+    <h2>データ管理</h2>
+    <ul>
+        <li><strong>データ保存:</strong> 作成したデータを、後から再編集できるファイル形式で保存します。</li>
+        <li><strong>データ読込:</strong> 保存したファイルを読み込み、編集を再開します。</li>
+        <li><strong>PNG出力:</strong> 現在のロジックモデルを画像として保存します。</li>
+        <li><strong>自動保存:</strong> 変更は自動的にブラウザに保存されます。</li>
+    </ul>
 
     <div class="footer">
         Business Framework - 使い方ガイド
